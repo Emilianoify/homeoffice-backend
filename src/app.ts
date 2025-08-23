@@ -1,68 +1,32 @@
 import express from "express";
-import cors from "cors";
 import helmet from "helmet";
-import { createServer } from "http";
-import { Server } from "socket.io";
-import routes from "./routes";
-import { authMiddleware } from "./middlewares/auth";
-import { rateLimitMiddleware } from "./middlewares/rateLimit";
-import logger from "./middlewares/logging";
+import cors from "cors";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
+import { ERROR_MESSAGES } from "./utils/constants/messages/error.messages";
+import authRoutes from "./routes/auth/auth.routes";
 
 const app = express();
-const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    credentials: true,
-  },
-});
 
-// Middlewares globales
+// Middlewares
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: true, // Ajustar en producción
     credentials: true,
   }),
 );
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true }));
-app.use(rateLimitMiddleware);
+app.use(morgan("dev"));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Logging de requests
-app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.path} - ${req.ip}`);
-  next();
+app.use("/auth", authRoutes);
+
+// 404 handler
+app.use((_req, res) => {
+  res.status(404).json({ message: ERROR_MESSAGES.ROUTING.NOT_FOUND });
 });
 
-// Rutas
-app.use("/api", routes);
-
-// Middleware de manejo de errores
-app.use(
-  (
-    err: Error,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction,
-  ) => {
-    logger.error(err.stack);
-    res.status(500).json({ message: "Error interno del servidor" });
-  },
-);
-
-// Configuración de Socket.IO para notificaciones en tiempo real
-io.on("connection", (socket) => {
-  console.log("Usuario conectado:", socket.id);
-
-  socket.on("join-user-room", (userId) => {
-    socket.join(`user-${userId}`);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Usuario desconectado:", socket.id);
-  });
-});
-
-export { io };
 export default app;

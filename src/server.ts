@@ -1,26 +1,41 @@
-import dotenv from "dotenv";
 import app from "./app";
-import { connectDB } from "./config/db";
-import logger from "./middlewares/logging";
-
-dotenv.config();
+import { SUCCESS_MESSAGES } from "./utils/constants/messages/success.messages";
+import { ERROR_MESSAGES } from "./utils/constants/messages/error.messages";
+import { testDbConnection } from "./config/db";
+import { createDefaultRoles } from "./utils/seeders/createRoles";
+import sequelize from "./config/db";
+import "./models";
 
 const PORT = process.env.PORT || 3000;
 
-async function startServer() {
+const initializeDatabase = async (): Promise<void> => {
   try {
-    // Conectar a la base de datos
-    await connectDB();
+    await testDbConnection();
+
+    await sequelize.sync({ alter: true });
+
+    await createDefaultRoles();
+
+    console.log(SUCCESS_MESSAGES.DB.DB_UP);
+  } catch (error) {
+    console.error(ERROR_MESSAGES.DB.DB_CONNECTION, error);
+    throw error;
+  }
+};
+
+const startServer = async (): Promise<void> => {
+  try {
+    // Inicializar base de datos y datos por defecto
+    await initializeDatabase();
 
     // Iniciar servidor
     app.listen(PORT, () => {
-      logger.info(`Servidor iniciado en puerto ${PORT}`);
-      console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+      console.log(`${SUCCESS_MESSAGES.SERVER.STARTUP} ${PORT}`);
     });
   } catch (error) {
-    logger.error("Error al iniciar servidor:", error);
+    console.error(ERROR_MESSAGES.SERVER.STARTUP, error);
     process.exit(1);
   }
-}
+};
 
 startServer();
