@@ -16,7 +16,7 @@ const defaultRoles: RoleData[] = [
     permissions: ["*"], // Todos los permisos
   },
   {
-    name: "Coordinación",
+    name: "Coordinacion",
     description:
       "Gestión de pacientes, profesionales y asignación de especialidades",
     permissions: [
@@ -42,7 +42,7 @@ const defaultRoles: RoleData[] = [
     ],
   },
   {
-    name: "Contaduría",
+    name: "Contaduria",
     description: "Gestión de facturación electrónica y auditoría de visitas",
     permissions: [
       "generate_invoices",
@@ -89,7 +89,7 @@ const defaultRoles: RoleData[] = [
     ],
   },
   {
-    name: "Facturación",
+    name: "Facturacion",
     description: "Gestión específica de facturación y cobranzas",
     permissions: [
       "manage_billing",
@@ -120,7 +120,7 @@ const defaultRoles: RoleData[] = [
     ],
   },
   {
-    name: "Recepción",
+    name: "Recepcion",
     description: "Atención al público y gestión de turnos",
     permissions: ["manage_appointments", "customer_service", "view_schedules"],
   },
