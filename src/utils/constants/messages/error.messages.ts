@@ -20,7 +20,8 @@ export const ERROR_MESSAGES = {
     ROLE_NOT_FOUND: "Rol no encontrado.",
     ROLE_INACTIVE: "Rol inactivo.",
     SECTOR_REQUIRED: "El sector es requerido para este rol",
-
+    SECTOR_NOT_FOUND: "Sector no encontrado",
+    SAME_SECTOR: "El nuevo sector debe ser diferente al actual",
     MISSING_CREDENTIALS: "Username y password son requeridos.",
     INVALID_CREDENTIALS: "Credenciales inválidas.",
     USER_INACTIVE: "Usuario inactivo. Contacte al administrador",

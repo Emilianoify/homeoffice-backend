@@ -3,7 +3,7 @@
 // =====================================================
 const axios = require("axios");
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = "http://localhost:3000";
 
 async function quickTest() {
   console.log("🚀 Test rápido del sistema...\n");
@@ -12,8 +12,8 @@ async function quickTest() {
     // 1. Login
     console.log("🔐 Haciendo login...");
     const login = await axios.post(`${BASE_URL}/auth/login`, {
-      username: "juan123",
-      password: "Password123",
+      username: "user001",
+      password: "MiPassword123",
     });
 
     const token = login.data.payload.data.tokens.accessToken;
