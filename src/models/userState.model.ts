@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { COMMENTS } from "../utils/constants/messages/comments";
 
-const UserState = sequelize.define(
+const UserStateModel = sequelize.define(
   "UserState",
   {
     id: {
@@ -129,4 +129,4 @@ const UserState = sequelize.define(
   },
 );
 
-export default UserState;
+export default UserStateModel;

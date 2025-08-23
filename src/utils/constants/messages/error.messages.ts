@@ -19,6 +19,8 @@ export const ERROR_MESSAGES = {
     EMAIL_IN_USE: "Email ya está registrado.",
     ROLE_NOT_FOUND: "Rol no encontrado.",
     ROLE_INACTIVE: "Rol inactivo.",
+    SECTOR_REQUIRED: "El sector es requerido para este rol",
+
     MISSING_CREDENTIALS: "Username y password son requeridos.",
     INVALID_CREDENTIALS: "Credenciales inválidas.",
     USER_INACTIVE: "Usuario inactivo. Contacte al administrador",
@@ -67,9 +69,20 @@ export const ERROR_MESSAGES = {
     INVALID_FIRSTNAME: "Nombre debe tener al menos 2 caracteres.",
     INVALID_LASTNAME: "Apellido debe tener al menos 2 caracteres.",
     UPDATE_FAILED: "Error al actualizar el perfil.",
+    EMPTY_SECTOR: "Usuario sin sector asignado",
   },
   ROLE: { ROLE_CREATION: "Error al crear el rol." },
-
+  STATES: {
+    INVALID_STATE:
+      "Estado inválido. Estados válidos: activo, baño, almuerzo, ausente, licencia, desconectado",
+    NO_ACTIVE_SESSION: "No hay sesión activa. Debe iniciar sesión primero",
+    STATE_CHANGE_FAILED: "Error al cambiar el estado del usuario",
+    CURRENT_STATE_NOT_FOUND: "No se pudo obtener el estado actual",
+    HISTORY_FETCH_FAILED: "Error al obtener el historial de estados",
+    TEAM_STATES_FETCH_FAILED: "Error al obtener los estados del equipo",
+    INVALID_DATE_FORMAT: "Formato de fecha inválido. Use YYYY-MM-DD",
+    LIMIT_EXCEEDED: "El límite de registros no puede exceder 100",
+  },
   PATIENT: { PATIENT_CREATION: "Error al crear el paciente." },
   PROFESSIONAL: { PROFESSIONAL_CREATION: "Error al crear el profesional." },
 };

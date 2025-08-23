@@ -15,21 +15,8 @@ import {
   isValidPassword,
   isValidUsername,
 } from "../../utils/validators/validators";
-
-// Mapeo de sectores por rol - usando el mismo del seeder
-const SECTOR_BY_ROLE: { [key: string]: string } = {
-  Administrador: "Administración",
-  Coordinación: "Coordinación",
-  Profesionales: "Profesionales",
-  Contaduría: "Contaduría",
-  Compras: "Compras",
-  Liquidaciones: "Liquidaciones",
-  "Coordinador de Sector": "Variable",
-  Facturación: "Facturación",
-  "Recursos Humanos": "RRHH",
-  Reclamos: "Reclamos",
-  Recepción: "Recepción",
-};
+import { SECTOR_BY_ROLE } from "../../utils/constants/const";
+import { UserRole } from "../../utils/enums/UserRole";
 
 interface RegisterRequest {
   username: string;
@@ -101,12 +88,14 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     // Si no se proporciona sector, intentar auto-asignar por rol
     if (!finalSector) {
-      const autoSector = SECTOR_BY_ROLE[role.name];
+      // Usar el nombre del rol obtenido de la base de datos para buscar el sector.
+      const autoSector = SECTOR_BY_ROLE[role.name as UserRole];
+
       if (autoSector && autoSector !== "Variable") {
         finalSector = autoSector;
       } else {
         // Para roles como "Coordinador de Sector" que requieren especificar sector
-        sendBadRequest(res, "El sector es requerido para este rol", "400");
+        sendBadRequest(res, ERROR_MESSAGES.AUTH.SECTOR_REQUIRED, "400");
         return;
       }
     }

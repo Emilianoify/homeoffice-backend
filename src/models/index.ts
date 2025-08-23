@@ -1,10 +1,10 @@
 import User from "./user.model";
 import Role from "./role.model";
 import UserSession from "./userSession.model";
-import UserState from "./userState.model";
+import UserStateModel from "./userState.model";
 import PopupResponse from "./popupResponse.model";
 import Task from "./task.model";
-import TaskFile from "./taskfile.model";
+import TaskFile from "./taskFile.model";
 import DailyReport from "./dailyReport.model";
 
 // ===== RELACIONES EXISTENTES =====
@@ -30,22 +30,22 @@ UserSession.belongsTo(User, {
 });
 
 // ===== RELACIONES DE USER STATES =====
-User.hasMany(UserState, {
+User.hasMany(UserStateModel, {
   foreignKey: "userId",
   as: "states",
 });
 
-UserState.belongsTo(User, {
+UserStateModel.belongsTo(User, {
   foreignKey: "userId",
   as: "user",
 });
 
-UserSession.hasMany(UserState, {
+UserSession.hasMany(UserStateModel, {
   foreignKey: "sessionId",
   as: "stateChanges",
 });
 
-UserState.belongsTo(UserSession, {
+UserStateModel.belongsTo(UserSession, {
   foreignKey: "sessionId",
   as: "session",
 });
@@ -142,7 +142,7 @@ export {
   User,
   Role,
   UserSession,
-  UserState,
+  UserStateModel,
   PopupResponse,
   Task,
   TaskFile,
@@ -153,7 +153,7 @@ export default {
   User,
   Role,
   UserSession,
-  UserState,
+  UserStateModel,
   PopupResponse,
   Task,
   TaskFile,

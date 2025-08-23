@@ -1,15 +1,7 @@
+import { PopupFrequency } from "../utils/enums/PopupFrequency";
+import { Sector } from "../utils/enums/Sector";
+import { UserState } from "../utils/enums/UserState";
 import { IRole } from "./role.interface";
-
-// Tipos para el sistema de home office
-export type UserState =
-  | "desconectado"
-  | "activo"
-  | "baño"
-  | "almuerzo"
-  | "ausente"
-  | "licencia";
-
-export type PopupFrequency = "standard" | "premium";
 
 export interface IUser {
   id: string;
@@ -26,14 +18,16 @@ export interface IUser {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
-  currentState: UserState;
+  currentState: UserState; // ← Tipo del enum
+  popupFrequency: PopupFrequency; // ← Tipo del enum
+  sector: Sector;
   isInSession: boolean;
   currentSessionId?: string | null;
   productivityScore?: number | null;
-  popupFrequency: PopupFrequency;
+
   totalPopupsReceived: number;
   totalPopupsCorrect: number;
-  sector: string;
+
   weeklyProductivityGoal: number;
   qualifiesForFlexFriday: boolean;
   role?: IRole;
@@ -46,6 +40,7 @@ export interface IUserSafe
 
 export interface ChangeStateDto {
   newState: UserState;
+  reason?: string;
 }
 
 export interface StartSessionDto {}

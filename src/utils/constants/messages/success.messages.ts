@@ -11,6 +11,8 @@ export const SUCCESS_MESSAGES = {
     PASSWORD_RESET_SUCCESS: "Contraseña actualizada correctamente.",
     TOKEN_REFRESHED: "Token renovado exitosamente.",
     PASSWORD_CHANGED_SUCCESS: "Contraseña cambiada exitosamente.",
+    SESSION_CLOSED: "Sesión de trabajo cerrada correctamente",
+    WORK_SESSION_ENDED: "Jornada laboral finalizada exitosamente",
   },
   USER: {
     USER_CREATED: "Usuario creado correctamente.",
@@ -32,6 +34,15 @@ export const SUCCESS_MESSAGES = {
   },
   ROLE: {
     ROLE_CREATED: "Rol creado correctamente.",
+  },
+  STATES: {
+    STATE_CHANGED: "Estado cambiado correctamente",
+    CURRENT_STATE_RETRIEVED: "Estado actual obtenido exitosamente",
+    HISTORY_RETRIEVED: "Historial de estados obtenido exitosamente",
+    TEAM_STATES_RETRIEVED: "Estados del equipo obtenidos exitosamente",
+    SESSION_STARTED: "Sesión de trabajo iniciada correctamente",
+    SESSION_PAUSED: "Sesión de trabajo pausada",
+    SESSION_RESUMED: "Sesión de trabajo reanudada",
   },
   PATIENT: {
     PATIENT_CREATED: "Paciente creado correctamente.",

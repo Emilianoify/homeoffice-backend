@@ -1,5 +1,5 @@
 import { IUser } from "../../interfaces/user.interface";
-import { User, Role } from "../../models";
+import { User, Role, UserSession } from "../../models";
 import {
   sendBadRequest,
   sendInternalErrorResponse,
@@ -10,6 +10,10 @@ import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.message
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { calculateNextPopupTime } from "../../utils/commons/nextPopupTime";
+import UserStateModel from "../../models/userState.model";
+import { StateChangedBy } from "../../utils/enums/StateChangedBy";
+import { UserState } from "../../utils/enums/UserState";
 
 interface LoginRequest {
   username: string;
@@ -20,13 +24,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password }: LoginRequest = req.body;
 
-    // Validación de campos requeridos
     if (!username || !password) {
       sendBadRequest(res, ERROR_MESSAGES.AUTH.MISSING_CREDENTIALS, "400");
       return;
     }
-
-    // Buscar usuario por username, incluyendo información del rol
     const user = (await User.findOne({
       where: { username },
       include: [
@@ -70,7 +71,62 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Configuración de tokens con validación de tipos
+    // 1. Cerrar sesión activa anterior (si existe)
+    await UserSession.update(
+      {
+        sessionEnd: new Date(),
+        isActive: false,
+      },
+      {
+        where: {
+          userId: user.id,
+          isActive: true,
+        },
+      },
+    );
+
+    // 2. Obtener información de la request
+    const ipAddress = req.ip || req.socket.remoteAddress || null;
+    const userAgent = req.get("User-Agent") || null;
+
+    // 3. Calcular próximo popup basado en frecuencia del usuario
+    const nextPopupAt = calculateNextPopupTime(user.popupFrequency);
+
+    // 4. Crear nueva sesión de trabajo
+    const newSession = (await UserSession.create({
+      userId: user.id,
+      sessionStart: new Date(),
+      currentState: "desconectado", // Inicia desconectado, luego cambia a activo
+      ipAddress,
+      userAgent,
+      nextPopupAt,
+      isActive: true,
+    })) as any;
+
+    // 5. Actualizar estado del usuario
+    await User.update(
+      {
+        currentState: "desconectado", // Estará desconectado hasta que haga "Iniciar trabajo"
+        isInSession: true,
+        currentSessionId: newSession.id,
+        lastLogin: new Date(),
+      },
+      { where: { id: user.id } },
+    );
+
+    // 6. Crear registro inicial en UserState
+    await UserStateModel.create({
+      userId: user.id,
+      sessionId: newSession.id,
+      state: UserState.DESCONECTADO, // ← ENUM
+      stateStart: new Date(),
+      changedBy: StateChangedBy.SYSTEM, // ← ENUM
+      reason: "Login inicial",
+      ipAddress,
+      userAgent,
+    });
+
+    // ===== GENERAR TOKENS (LÓGICA ORIGINAL) =====
     const accessTokenExpiry = process.env.JWT_EXPIRES_IN || "1h";
     const refreshTokenExpiry = process.env.JWT_REFRESH_EXPIRES_IN || "7d";
 
@@ -97,10 +153,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       expiresIn: refreshTokenExpiry,
     } as jwt.SignOptions);
 
-    // Actualizar lastLogin
-    await User.update({ lastLogin: new Date() }, { where: { id: user.id } });
-
-    // Preparar datos de respuesta (sin password)
+    // ===== PREPARAR RESPUESTA COMPLETA =====
     const responseData = {
       user: {
         id: user.id,
@@ -108,7 +161,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         firstname: user.firstname,
         lastname: user.lastname,
         corporative_email: user.corporative_email,
+        sector: user.sector,
         isActive: user.isActive,
+        currentState: "desconectado",
+        isInSession: true,
+        productivityScore: user.productivityScore,
+        popupFrequency: user.popupFrequency,
+        weeklyProductivityGoal: user.weeklyProductivityGoal,
+        qualifiesForFlexFriday: user.qualifiesForFlexFriday,
         role: {
           id: user.role.id,
           name: user.role.name,
@@ -122,6 +182,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         refreshToken,
         accessTokenExpiry,
         refreshTokenExpiry,
+      },
+      // Información de la sesión de trabajo
+      workSession: {
+        sessionId: newSession.id,
+        sessionStart: newSession.sessionStart,
+        currentState: "desconectado",
+        nextPopupAt: nextPopupAt,
+        totalMinutesWorked: 0,
       },
     };
 

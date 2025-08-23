@@ -1,3 +1,10 @@
+import { PopupAction } from "../enums/PopupAction";
+import { PopupResult } from "../enums/PopupResult";
+import { StateChangedBy } from "../enums/StateChangedBy";
+import { TaskPriority } from "../enums/TaskPriority";
+import { TaskStatus } from "../enums/TaskStatus";
+import { UserState } from "../enums/UserState";
+
 // Función auxiliar para validar formato de email
 export const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -17,3 +24,10 @@ export const isValidUsername = (username: string): boolean => {
   const usernameRegex = /^[a-zA-Z0-9_]{3,50}$/;
   return usernameRegex.test(username);
 };
+
+export const USER_STATE_VALUES = Object.values(UserState);
+export const TASK_PRIORITY_VALUES = Object.values(TaskPriority);
+export const TASK_STATUS_VALUES = Object.values(TaskStatus);
+export const POPUP_RESULT_VALUES = Object.values(PopupResult);
+export const POPUP_ACTION_VALUES = Object.values(PopupAction);
+export const STATE_CHANGED_BY_VALUES = Object.values(StateChangedBy);

@@ -1,5 +1,7 @@
 import { Role } from "../../models";
 import { IRole } from "../../interfaces/role.interface";
+import { SECTOR_BY_ROLE } from "../constants/const";
+import { UserRole } from "../enums/UserRole";
 
 interface RoleData {
   name: string;
@@ -124,21 +126,6 @@ const defaultRoles: RoleData[] = [
   },
 ];
 
-// Mapeo de sectores por rol
-export const SECTOR_BY_ROLE: { [key: string]: string } = {
-  Administrador: "Administración",
-  Coordinación: "Coordinación",
-  Profesionales: "Profesionales",
-  Contaduría: "Contaduría",
-  Compras: "Compras",
-  Liquidaciones: "Liquidaciones",
-  "Coordinador de Sector": "Variable",
-  Facturación: "Facturación",
-  "Recursos Humanos": "RRHH",
-  Reclamos: "Reclamos",
-  Recepción: "Recepción",
-};
-
 export const createDefaultRoles = async (
   verbose: boolean = false,
 ): Promise<void> => {
@@ -192,7 +179,7 @@ export const createDefaultRoles = async (
       console.log("=".repeat(60));
 
       createdRoles.forEach((role, index) => {
-        const sector = SECTOR_BY_ROLE[role.name] || "N/A";
+        const sector = SECTOR_BY_ROLE[role.name as UserRole] || "N/A";
         console.log(`${index + 1}. ${role.name}`);
         console.log(`   ID: ${role.id}`);
         console.log(`   Descripción: ${role.description}`);

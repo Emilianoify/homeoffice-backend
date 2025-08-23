@@ -2,6 +2,9 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { ERROR_MESSAGES } from "../utils/constants/messages/error.messages";
 import { COMMENTS } from "../utils/constants/messages/comments";
+import { USER_STATE_VALUES } from "../utils/validators/validators";
+import { UserState } from "../utils/enums/UserState";
+import { PopupFrequency } from "../utils/enums/PopupFrequency";
 
 const User = sequelize.define(
   "User",
@@ -86,11 +89,9 @@ const User = sequelize.define(
     currentState: {
       type: DataTypes.STRING(20),
       allowNull: false,
-      defaultValue: "desconectado",
+      defaultValue: UserState.DESCONECTADO, // ← ENUM en lugar de string
       validate: {
-        isIn: [
-          ["desconectado", "activo", "baño", "almuerzo", "ausente", "licencia"],
-        ],
+        isIn: [USER_STATE_VALUES], // ← Array del enum
       },
       comment: COMMENTS.USER_CURRENT_STATE,
     },
@@ -118,9 +119,9 @@ const User = sequelize.define(
     popupFrequency: {
       type: DataTypes.STRING(10),
       allowNull: false,
-      defaultValue: "standard",
+      defaultValue: PopupFrequency.STANDARD, // ← ENUM
       validate: {
-        isIn: [["standard", "premium"]],
+        isIn: [Object.values(PopupFrequency)], // ← Valores del enum
       },
       comment: COMMENTS.USER_POPUP_FREQUENCY,
     },
