@@ -75,6 +75,7 @@ export const authMiddleware = async (
       corporative_email: user.corporative_email,
       role: user.role,
       isActive: user.isActive,
+      sector: user.sector,
     };
 
     next();

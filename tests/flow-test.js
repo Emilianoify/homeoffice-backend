@@ -65,7 +65,7 @@ async function runFullFlowTest() {
       lastname: "Testing",
       corporative_email: `test${Date.now()}@empresa.com`,
       password: "Password123",
-      roleId: "436ed456-0221-4edd-a686-a250340ee60f", // ID del rol Administrador
+      roleId: "79744abf-440d-461f-bdbb-08fa2439c69f", // ID del rol Coordinador
     });
 
     if (registerResult.success) {
