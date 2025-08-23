@@ -9,7 +9,7 @@ import {
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.messages";
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import {
   isValidEmail,
   isValidPassword,

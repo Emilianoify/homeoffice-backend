@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { User, Role } from "../../models";
 import { IUser } from "../../interfaces/user.interface";
 import {

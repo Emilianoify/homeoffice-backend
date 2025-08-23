@@ -1,5 +1,4 @@
 import { Role } from "../../models";
-
 import { IRole } from "../../interfaces/role.interface";
 
 interface RoleData {
@@ -74,7 +73,71 @@ const defaultRoles: RoleData[] = [
       "manage_employee_payments",
     ],
   },
+  // ===== NUEVOS ROLES PARA HOME OFFICE =====
+  {
+    name: "Coordinador de Sector",
+    description:
+      "Coordina un sector específico, asigna tareas y supervisa productividad",
+    permissions: [
+      "view_sector_team",
+      "assign_tasks",
+      "view_team_productivity",
+      "manage_sector_states",
+      "create_sector_reports",
+    ],
+  },
+  {
+    name: "Facturación",
+    description: "Gestión específica de facturación y cobranzas",
+    permissions: [
+      "manage_billing",
+      "create_invoices",
+      "track_payments",
+      "view_billing_reports",
+    ],
+  },
+  {
+    name: "Recursos Humanos",
+    description:
+      "Gestión de personal, reportes de productividad y viernes flex",
+    permissions: [
+      "view_all_productivity",
+      "manage_flex_friday",
+      "view_all_reports",
+      "manage_employees",
+      "export_reports",
+    ],
+  },
+  {
+    name: "Reclamos",
+    description: "Gestión y resolución de reclamos y quejas",
+    permissions: [
+      "manage_complaints",
+      "track_resolutions",
+      "create_complaint_reports",
+    ],
+  },
+  {
+    name: "Recepción",
+    description: "Atención al público y gestión de turnos",
+    permissions: ["manage_appointments", "customer_service", "view_schedules"],
+  },
 ];
+
+// Mapeo de sectores por rol
+export const SECTOR_BY_ROLE: { [key: string]: string } = {
+  Administrador: "Administración",
+  Coordinación: "Coordinación",
+  Profesionales: "Profesionales",
+  Contaduría: "Contaduría",
+  Compras: "Compras",
+  Liquidaciones: "Liquidaciones",
+  "Coordinador de Sector": "Variable", // Depende del sector que coordine
+  Facturación: "Facturación",
+  "Recursos Humanos": "RRHH",
+  Reclamos: "Reclamos",
+  Recepción: "Recepción",
+};
 
 export const createDefaultRoles = async (
   verbose: boolean = false,
@@ -129,9 +192,11 @@ export const createDefaultRoles = async (
       console.log("=".repeat(60));
 
       createdRoles.forEach((role, index) => {
+        const sector = SECTOR_BY_ROLE[role.name] || "N/A";
         console.log(`${index + 1}. ${role.name}`);
         console.log(`   ID: ${role.id}`);
         console.log(`   Descripción: ${role.description}`);
+        console.log(`   Sector: ${sector}`);
         console.log(`   Activo: ${role.isActive ? "Sí" : "No"}`);
         console.log(
           `   Permisos: ${role.permissions?.length || 0} configurados`,

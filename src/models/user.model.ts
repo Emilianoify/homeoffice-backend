@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { ERROR_MESSAGES } from "../utils/constants/messages/error.messages";
+import { COMMENTS } from "../utils/constants/messages/comments";
 
 const User = sequelize.define(
   "User",
@@ -81,6 +82,77 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
+
+    currentState: {
+      type: DataTypes.ENUM(
+        "desconectado",
+        "activo",
+        "baño",
+        "almuerzo",
+        "ausente",
+        "licencia",
+      ),
+      allowNull: false,
+      defaultValue: "desconectado",
+      comment: COMMENTS.USER_CURRENT_STATE,
+    },
+    isInSession: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+      comment: COMMENTS.USER_IS_IN_SESSION,
+    },
+    currentSessionId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      comment: COMMENTS.USER_CURRENT_SESSION_ID,
+    },
+    productivityScore: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: true,
+      defaultValue: 0,
+      validate: {
+        min: 0,
+        max: 100,
+      },
+      comment: COMMENTS.USER_PRODUCTIVITY_SCORE,
+    },
+    popupFrequency: {
+      type: DataTypes.ENUM("standard", "premium"),
+      allowNull: false,
+      defaultValue: "standard",
+      comment: COMMENTS.USER_POPUP_FREQUENCY,
+    },
+    totalPopupsReceived: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+      comment: COMMENTS.USER_TOTAL_POPUPS_RECEIVED,
+    },
+    totalPopupsCorrect: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+      comment: COMMENTS.USER_TOTAL_POPUPS_CORRECT,
+    },
+    sector: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      comment: COMMENTS.USER_SECTOR,
+    },
+    // Campos para el sistema de viernes flex
+    weeklyProductivityGoal: {
+      type: DataTypes.DECIMAL(5, 2),
+      defaultValue: 85,
+      allowNull: false,
+      comment: COMMENTS.USER_WEEKLY_PRODUCTIVITY_GOAL,
+    },
+    qualifiesForFlexFriday: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+      comment: COMMENTS.USER_QUALIFIES_FLEX_FRIDAY,
+    },
   },
   {
     tableName: "users",
@@ -101,6 +173,23 @@ const User = sequelize.define(
       },
       {
         fields: ["isActive"],
+      },
+      // NUEVOS INDEXES PARA HOME OFFICE
+      {
+        fields: ["currentState"],
+        name: "idx_users_current_state",
+      },
+      {
+        fields: ["isInSession"],
+        name: "idx_users_is_in_session",
+      },
+      {
+        fields: ["sector"],
+        name: "idx_users_sector",
+      },
+      {
+        fields: ["productivityScore"],
+        name: "idx_users_productivity_score",
       },
     ],
   },
