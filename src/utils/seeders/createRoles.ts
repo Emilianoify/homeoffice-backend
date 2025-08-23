@@ -132,7 +132,7 @@ export const SECTOR_BY_ROLE: { [key: string]: string } = {
   Contaduría: "Contaduría",
   Compras: "Compras",
   Liquidaciones: "Liquidaciones",
-  "Coordinador de Sector": "Variable", // Depende del sector que coordine
+  "Coordinador de Sector": "Variable",
   Facturación: "Facturación",
   "Recursos Humanos": "RRHH",
   Reclamos: "Reclamos",

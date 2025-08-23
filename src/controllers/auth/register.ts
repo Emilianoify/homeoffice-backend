@@ -16,6 +16,21 @@ import {
   isValidUsername,
 } from "../../utils/validators/validators";
 
+// Mapeo de sectores por rol - usando el mismo del seeder
+const SECTOR_BY_ROLE: { [key: string]: string } = {
+  Administrador: "Administración",
+  Coordinación: "Coordinación",
+  Profesionales: "Profesionales",
+  Contaduría: "Contaduría",
+  Compras: "Compras",
+  Liquidaciones: "Liquidaciones",
+  "Coordinador de Sector": "Variable",
+  Facturación: "Facturación",
+  "Recursos Humanos": "RRHH",
+  Reclamos: "Reclamos",
+  Recepción: "Recepción",
+};
+
 interface RegisterRequest {
   username: string;
   firstname: string;
@@ -23,6 +38,7 @@ interface RegisterRequest {
   corporative_email: string;
   password: string;
   roleId: string;
+  sector?: string; // Opcional - se puede auto-asignar por rol
 }
 
 export const register = async (req: Request, res: Response): Promise<void> => {
@@ -34,6 +50,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       corporative_email,
       password,
       roleId,
+      sector,
     }: RegisterRequest = req.body;
 
     // Validación de campos requeridos
@@ -79,6 +96,21 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Determinar el sector
+    let finalSector = sector;
+
+    // Si no se proporciona sector, intentar auto-asignar por rol
+    if (!finalSector) {
+      const autoSector = SECTOR_BY_ROLE[role.name];
+      if (autoSector && autoSector !== "Variable") {
+        finalSector = autoSector;
+      } else {
+        // Para roles como "Coordinador de Sector" que requieren especificar sector
+        sendBadRequest(res, "El sector es requerido para este rol", "400");
+        return;
+      }
+    }
+
     // Verificar que el username no esté en uso
     const existingUsername = await User.findOne({ where: { username } });
     if (existingUsername) {
@@ -97,7 +129,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Crear el usuario
+    // Crear el usuario con el sector
     const newUser = (await User.create({
       username,
       firstname,
@@ -105,6 +137,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       corporative_email,
       password: hashedPassword,
       roleId,
+      sector: finalSector, // ← NUEVO CAMPO AGREGADO
       isActive: true,
     })) as any;
 
@@ -121,7 +154,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     })) as IUser | null;
 
     // Preparar datos de respuesta
-
     if (!userWithRole) {
       return sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_NO_ROLE, "401");
     }
@@ -132,6 +164,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       firstname: userWithRole.firstname,
       lastname: userWithRole.lastname,
       corporative_email: userWithRole.corporative_email,
+      sector: userWithRole.sector, // ← INCLUIR EN RESPUESTA
       isActive: userWithRole.isActive,
       role: userWithRole.role,
       createdAt: userWithRole.createdAt,

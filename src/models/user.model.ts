@@ -82,18 +82,16 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
-
+    // ===== NUEVOS CAMPOS PARA HOME OFFICE =====
     currentState: {
-      type: DataTypes.ENUM(
-        "desconectado",
-        "activo",
-        "baño",
-        "almuerzo",
-        "ausente",
-        "licencia",
-      ),
+      type: DataTypes.STRING(20),
       allowNull: false,
       defaultValue: "desconectado",
+      validate: {
+        isIn: [
+          ["desconectado", "activo", "baño", "almuerzo", "ausente", "licencia"],
+        ],
+      },
       comment: COMMENTS.USER_CURRENT_STATE,
     },
     isInSession: {
@@ -118,9 +116,12 @@ const User = sequelize.define(
       comment: COMMENTS.USER_PRODUCTIVITY_SCORE,
     },
     popupFrequency: {
-      type: DataTypes.ENUM("standard", "premium"),
+      type: DataTypes.STRING(10),
       allowNull: false,
       defaultValue: "standard",
+      validate: {
+        isIn: [["standard", "premium"]],
+      },
       comment: COMMENTS.USER_POPUP_FREQUENCY,
     },
     totalPopupsReceived: {
