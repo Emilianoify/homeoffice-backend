@@ -7,6 +7,7 @@ import {
 } from "../../controllers/states";
 import authMiddleware from "../../middlewares/authMiddleware";
 import checkToken from "../../middlewares/checkToken";
+import { getStateTimeout } from "../../controllers/states/getStateTimeout";
 
 const router = Router();
 
@@ -18,6 +19,9 @@ router.post("/change", changeState);
 
 // Obtener estado actual del usuario
 router.get("/current", getCurrentState);
+
+//Obtener información de timeout del estado actual
+router.get("/timeout-info", getStateTimeout);
 
 // Obtener historial de estados del usuario
 router.get("/history", getStateHistory);

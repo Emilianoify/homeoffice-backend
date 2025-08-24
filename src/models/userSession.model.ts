@@ -65,6 +65,12 @@ const UserSession = sequelize.define(
       allowNull: true,
       comment: COMMENTS.SESSION_USER_AGENT,
     },
+    lastActivity: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW,
+      comment: COMMENTS.LAST_ACTIVITY,
+    },
     // Métricas de la sesión
     totalPopupsReceived: {
       type: DataTypes.INTEGER,
@@ -83,6 +89,25 @@ const UserSession = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
       comment: COMMENTS.SESSION_NEXT_POPUP,
+    },
+    warningsIssued: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+      comment: COMMENTS.TIMEOUT_QUANTITY,
+    },
+
+    autoTransitions: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+      comment: COMMENTS.QUANTITY_AUTO_TRANSITIONS,
+    },
+
+    lastWarningAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      comment: COMMENTS.LAST_TIMEOUT_WARNING,
     },
     // Tiempo en cada estado (JSON para estadísticas)
     stateTimeBreakdown: {
@@ -105,6 +130,14 @@ const UserSession = sequelize.define(
     timestamps: true,
     paranoid: false, // No soft delete para sessions
     indexes: [
+      {
+        fields: ["lastActivity"],
+        name: "idx_user_sessions_last_activity",
+      },
+      {
+        fields: ["isActive", "lastActivity"],
+        name: "idx_user_sessions_active_activity",
+      },
       {
         fields: ["userId"],
         name: "idx_user_sessions_user_id",

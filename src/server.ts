@@ -3,6 +3,8 @@ import { SUCCESS_MESSAGES } from "./utils/constants/messages/success.messages";
 import { ERROR_MESSAGES } from "./utils/constants/messages/error.messages";
 import { testDbConnection } from "./config/db";
 import { createDefaultRoles } from "./utils/seeders/createRoles";
+import { stateWorker } from "./utils/workers/stateWorker";
+
 import sequelize from "./config/db";
 import "./models";
 
@@ -27,7 +29,8 @@ const startServer = async (): Promise<void> => {
   try {
     // Inicializar base de datos y datos por defecto
     await initializeDatabase();
-
+    stateWorker.start();
+    console.log("🤖 Sistema de gestión automática de estados iniciado");
     // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`${SUCCESS_MESSAGES.SERVER.STARTUP} ${PORT}`);

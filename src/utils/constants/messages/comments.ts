@@ -112,4 +112,9 @@ export const COMMENTS = {
   REPORT_QUALIFIES_FLEX:
     "Si califica para viernes flex basado en productividad semanal",
   REPORT_WEEKLY_AVERAGE: "Promedio de productividad de la semana actual",
+  LAST_ACTIVITY: "Última actividad detectada del usuario en la sesión",
+  TIMEOUT_QUANTITY: "Número de advertencias de timeout emitidas en esta sesión",
+  QUANTITY_AUTO_TRANSITIONS:
+    "Número de transiciones automáticas en esta sesión",
+  LAST_TIMEOUT_WARNING: "Momento de la última advertencia de timeout",
 };

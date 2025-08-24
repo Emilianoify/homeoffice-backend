@@ -65,7 +65,6 @@ export async function handlePopupFailure(
     });
   } else {
     // Segunda falla: cerrar sesión
-    // TODO: Implementar cierre de sesión
 
     sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.CLOSING_SESSION, {
       result: PopupResult.SESSION_CLOSED,

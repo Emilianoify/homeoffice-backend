@@ -5,4 +5,5 @@ export enum UserState {
   ALMUERZO = "almuerzo",
   AUSENTE = "ausente",
   LICENCIA = "licencia",
+  BREVE_DESCANSO = "descanso breve",
 }

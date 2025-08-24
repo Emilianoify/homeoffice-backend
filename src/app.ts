@@ -11,6 +11,7 @@ import userRoutes from "./routes/user/user.routes";
 import adminRoutes from "./routes/admin/admin.routes";
 import popupsRoutes from "./routes/popups/popups.routes";
 import tasksRoutes from "./routes/tasks/tasks.routes";
+import { trackActivity } from "./middlewares/activityTracker";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(trackActivity);
 
 app.use("/auth", authRoutes);
 app.use("/states", statesRoutes);
