@@ -37,7 +37,7 @@ export const authMiddleware = async (
     // Verificar y decodificar el token
     const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
 
-    // Buscar el usuario en la base de datos
+    // Buscar el usuario en la base de datos CON TODA LA INFORMACIÓN
     const user = (await User.findByPk(decoded.id, {
       include: [
         {
@@ -46,7 +46,7 @@ export const authMiddleware = async (
           attributes: ["id", "name", "permissions", "isActive"],
         },
       ],
-      attributes: { exclude: ["password"] },
+      attributes: { exclude: ["password"] }, // ← Excluir solo password, traer todo lo demás
     })) as IUser | null;
 
     // Verificar que el usuario exista y esté activo
@@ -66,7 +66,7 @@ export const authMiddleware = async (
       return;
     }
 
-    // Agregar información del usuario al request
+    // Agregar TODA la información del usuario al request
     req.user = {
       id: user.id,
       username: user.username,
@@ -76,6 +76,22 @@ export const authMiddleware = async (
       role: user.role,
       isActive: user.isActive,
       sector: user.sector,
+
+      // ===== INFORMACIÓN FALTANTE PARA HOME OFFICE =====
+      currentState: user.currentState,
+      isInSession: user.isInSession,
+      currentSessionId: user.currentSessionId,
+      productivityScore: user.productivityScore,
+      popupFrequency: user.popupFrequency,
+      totalPopupsReceived: user.totalPopupsReceived,
+      totalPopupsCorrect: user.totalPopupsCorrect,
+      weeklyProductivityGoal: user.weeklyProductivityGoal,
+      qualifiesForFlexFriday: user.qualifiesForFlexFriday,
+      lastLogin: user.lastLogin,
+
+      // Timestamps útiles
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
 
     next();
