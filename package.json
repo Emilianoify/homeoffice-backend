@@ -16,8 +16,9 @@
     "test:states": "node tests/states-only.js",
     "test:admin": "node tests/admin-test.js",
     "test:admin:quick": "node tests/simple-admin-test.js",
-    "test:all": "npm run test:quick && npm run test:admin:quick",
-    "test:complete": "npm run test:flow && npm run test:admin",
+    "test:reports": "node tests/reports-test.js",
+    "test:all": "npm run test:quick && npm run test:admin:quick && npm run test:reports",
+    "test:complete": "npm run test:flow && npm run test:admin && npm run test:reports",
     "test:production": "node tests/production-ready.js",
     "validate": "npm run test:production"
   },

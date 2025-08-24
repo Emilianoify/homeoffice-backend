@@ -30,6 +30,14 @@ export const SUCCESS_MESSAGES = {
     USER_LIST_RETRIEVED: "Lista de usuarios obtenida exitosamente.",
     USER_ACTIVATED: "Usuario activado exitosamente.",
     USER_DEACTIVATED: "Usuario desactivado exitosamente.",
+    DASHBOARD_METRICS_RETRIEVED:
+      "Métricas del dashboard obtenidas exitosamente",
+    PRODUCTIVITY_RANKING_RETRIEVED:
+      "Ranking de productividad obtenido exitosamente",
+    COMPREHENSIVE_REPORT_GENERATED: "Reporte comprensivo generado exitosamente",
+    SECTOR_ANALYSIS_RETRIEVED: "Análisis por sector obtenido exitosamente",
+    PERFORMANCE_ALERTS_RETRIEVED:
+      "Alertas de rendimiento obtenidas exitosamente",
   },
   SERVER: {
     STARTUP: "Server running on",
@@ -64,6 +72,14 @@ export const SUCCESS_MESSAGES = {
     TASK_COMPLETED: "Tarea completada exitosamente",
     TASK_DELETED: "Tarea eliminada exitosamente",
     TASKS_RETRIEVED: "Tareas obtenidas exitosamente",
+  },
+  REPORTS: {
+    PERSONAL_REPORT_RETRIEVED: "Reporte personal obtenido exitosamente",
+    TEAM_REPORT_RETRIEVED: "Reporte del equipo obtenido exitosamente",
+    FLEX_FRIDAY_STATUS: "Estado de viernes flex obtenido exitosamente",
+    MANUAL_REPORT_GENERATED: "Reporte manual generado exitosamente",
+    WEEKLY_SUMMARY_RETRIEVED: "Resumen semanal obtenido exitosamente",
+    MONTHLY_SUMMARY_RETRIEVED: "Resumen mensual obtenido exitosamente",
   },
   PATIENT: {
     PATIENT_CREATED: "Paciente creado correctamente.",

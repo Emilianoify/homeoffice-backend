@@ -107,6 +107,15 @@ export const ERROR_MESSAGES = {
     INVALID_DUE_DATE: "La fecha límite debe ser futura",
     UNAUTHORIZED_TASK_ACCESS: "No tienes permisos para acceder a esta tarea",
   },
+  REPORTS: {
+    REPORT_NOT_FOUND: "Reporte no encontrado para la fecha especificada",
+    INVALID_DATE_RANGE: "Rango de fechas inválido",
+    FUTURE_DATE_NOT_ALLOWED: "No se pueden generar reportes de fechas futuras",
+    INSUFFICIENT_DATA: "Datos insuficientes para generar el reporte",
+    REPORT_GENERATION_FAILED: "Error al generar el reporte",
+    UNAUTHORIZED_SECTOR_ACCESS:
+      "No tienes permisos para ver reportes de este sector",
+  },
   PATIENT: { PATIENT_CREATION: "Error al crear el paciente." },
   PROFESSIONAL: { PROFESSIONAL_CREATION: "Error al crear el profesional." },
 };

@@ -158,7 +158,13 @@ const User = sequelize.define(
       allowNull: false,
       comment: COMMENTS.USER_QUALIFIES_FLEX_FRIDAY,
     },
+    lastProductivityUpdate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      comment: COMMENTS.LAST_PRODUCTIVITY_UPDATE,
+    },
   },
+
   {
     tableName: "users",
     modelName: "User",
@@ -179,7 +185,6 @@ const User = sequelize.define(
       {
         fields: ["isActive"],
       },
-      // NUEVOS INDEXES PARA HOME OFFICE
       {
         fields: ["currentState"],
         name: "idx_users_current_state",
@@ -195,6 +200,14 @@ const User = sequelize.define(
       {
         fields: ["productivityScore"],
         name: "idx_users_productivity_score",
+      },
+      {
+        fields: ["weeklyProductivityGoal"],
+        name: "idx_users_weekly_goal",
+      },
+      {
+        fields: ["qualifiesForFlexFriday"],
+        name: "idx_users_flex_friday",
       },
     ],
   },

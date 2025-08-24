@@ -7,6 +7,7 @@ import { stateWorker } from "./utils/workers/stateWorker";
 
 import sequelize from "./config/db";
 import "./models";
+import { reportWorker } from "./utils/workers/reportWorker";
 
 const PORT = process.env.PORT || 3000;
 
@@ -31,6 +32,8 @@ const startServer = async (): Promise<void> => {
     await initializeDatabase();
     stateWorker.start();
     console.log("🤖 Sistema de gestión automática de estados iniciado");
+    reportWorker.start(); // NUEVO
+    console.log("📊 Sistema de generación automática de reportes iniciado");
     // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`${SUCCESS_MESSAGES.SERVER.STARTUP} ${PORT}`);

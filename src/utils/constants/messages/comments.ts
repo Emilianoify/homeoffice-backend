@@ -117,4 +117,6 @@ export const COMMENTS = {
   QUANTITY_AUTO_TRANSITIONS:
     "Número de transiciones automáticas en esta sesión",
   LAST_TIMEOUT_WARNING: "Momento de la última advertencia de timeout",
+  LAST_PRODUCTIVITY_UPDATE:
+    "Última vez que se actualizó el score de productividad del usuario",
 };

@@ -11,6 +11,8 @@ import userRoutes from "./routes/user/user.routes";
 import adminRoutes from "./routes/admin/admin.routes";
 import popupsRoutes from "./routes/popups/popups.routes";
 import tasksRoutes from "./routes/tasks/tasks.routes";
+import reportsRoutes from "./routes/reports/reports.routes";
+
 import { trackActivity } from "./middlewares/activityTracker";
 
 const app = express();
@@ -35,6 +37,7 @@ app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/popups", popupsRoutes);
 app.use("/tasks", tasksRoutes);
+app.use("/reports", reportsRoutes);
 
 // 404 handler
 app.use((_req, res) => {
