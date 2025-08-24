@@ -2,7 +2,10 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { ERROR_MESSAGES } from "../utils/constants/messages/error.messages";
 import { COMMENTS } from "../utils/constants/messages/comments";
-import { USER_STATE_VALUES } from "../utils/validators/validators";
+import {
+  POPUP_FREQUENCY_VALUES,
+  USER_STATE_VALUES,
+} from "../utils/validators/validators";
 import { UserState } from "../utils/enums/UserState";
 import { PopupFrequency } from "../utils/enums/PopupFrequency";
 
@@ -121,7 +124,7 @@ const User = sequelize.define(
       allowNull: false,
       defaultValue: PopupFrequency.STANDARD, // ← ENUM
       validate: {
-        isIn: [Object.values(PopupFrequency)], // ← Valores del enum
+        isIn: [POPUP_FREQUENCY_VALUES], // ← Valores del enum
       },
       comment: COMMENTS.USER_POPUP_FREQUENCY,
     },

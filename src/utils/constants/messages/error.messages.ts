@@ -84,6 +84,14 @@ export const ERROR_MESSAGES = {
     INVALID_DATE_FORMAT: "Formato de fecha inválido. Use YYYY-MM-DD",
     LIMIT_EXCEEDED: "El límite de registros no puede exceder 100",
   },
+  POPUPS: {
+    NO_ACTIVE_SESSION: "No hay sesión activa. Debe iniciar sesión primero",
+    INVALID_DATE_FORMAT: "Formato de fecha inválido. Use YYYY-MM-DD",
+    POPUP_IS_ACTIVE: "Ya hay un pop-up pendiente de responder",
+    TIME_BETWEEN: "Aún no es hora del próximo pop-up",
+    MISSING_FIELDS: "ID del popup y respuesta son requeridos",
+    NOT_FOUND: "Pop-up no encontrado o ya respondido",
+  },
   PATIENT: { PATIENT_CREATION: "Error al crear el paciente." },
   PROFESSIONAL: { PROFESSIONAL_CREATION: "Error al crear el profesional." },
 };

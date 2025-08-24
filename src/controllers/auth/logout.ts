@@ -9,6 +9,8 @@ import { revokeToken } from "../../utils/commons/tokenManager";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.messages";
 import { Response } from "express";
+import { UserState } from "../../utils/enums/UserState";
+import { StateChangedBy } from "../../utils/enums/StateChangedBy";
 
 export const logout = async (
   req: AuthRequest,
@@ -70,7 +72,7 @@ export const logout = async (
           (currentBreakdown[currentState.state] || 0) + durationMinutes;
 
         // Calcular tiempo total trabajado (solo estados productivos)
-        const productiveStates = ["activo"];
+        const productiveStates = [UserState.ACTIVO];
         const totalWorked = productiveStates.reduce((sum, state) => {
           return sum + (currentBreakdown[state] || 0);
         }, 0);
@@ -88,9 +90,9 @@ export const logout = async (
       await UserStateModel.create({
         userId,
         sessionId: activeSession.id,
-        state: "desconectado",
+        state: UserState.DESCONECTADO,
         stateStart: now,
-        changedBy: "user",
+        changedBy: StateChangedBy.USER,
         reason: "Logout - fin de jornada",
         ipAddress,
         userAgent,
@@ -106,7 +108,7 @@ export const logout = async (
         {
           sessionEnd: now,
           isActive: false,
-          currentState: "desconectado",
+          currentState: UserState.DESCONECTADO,
         },
         { where: { id: activeSession.id } },
       );
@@ -114,7 +116,7 @@ export const logout = async (
       // 5. Actualizar estado del usuario
       await User.update(
         {
-          currentState: "desconectado",
+          currentState: UserState.DESCONECTADO,
           isInSession: false,
           currentSessionId: null,
           lastLogin: now,
@@ -147,7 +149,7 @@ export const logout = async (
           ),
           totalMinutesWorked: activeSession.stateTimeBreakdown?.activo || 0,
           stateBreakdown: activeSession.stateTimeBreakdown || {},
-          finalState: "desconectado",
+          finalState: UserState.DESCONECTADO,
         }
       : null;
 

@@ -1,6 +1,11 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { COMMENTS } from "../utils/constants/messages/comments";
+import {
+  POPUP_ACTION_VALUES,
+  POPUP_RESULT_VALUES,
+} from "../utils/validators/validators";
+import { PopupResult } from "../utils/enums/PopupResult";
 
 const PopupResponse = sequelize.define(
   "PopupResponse",
@@ -98,11 +103,9 @@ const PopupResponse = sequelize.define(
     result: {
       type: DataTypes.STRING(20),
       allowNull: false,
-      defaultValue: "pending",
+      defaultValue: PopupResult.PENDING,
       validate: {
-        isIn: [
-          ["pending", "correct", "incorrect", "timeout", "session_closed"],
-        ],
+        isIn: [[POPUP_RESULT_VALUES]],
       },
       comment: COMMENTS.POPUP_RESULT,
     },
@@ -110,15 +113,7 @@ const PopupResponse = sequelize.define(
       type: DataTypes.STRING(30),
       allowNull: true,
       validate: {
-        isIn: [
-          [
-            "none",
-            "warning",
-            "second_chance",
-            "session_closed",
-            "admin_notified",
-          ],
-        ],
+        isIn: [[POPUP_ACTION_VALUES]],
       },
       comment: COMMENTS.POPUP_ACTION_TAKEN,
     },

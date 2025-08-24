@@ -1,6 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { COMMENTS } from "../utils/constants/messages/comments";
+import { UserState } from "../utils/enums/UserState";
+import { USER_STATE_VALUES } from "../utils/validators/validators";
 
 const UserSession = sequelize.define(
   "UserSession",
@@ -40,11 +42,9 @@ const UserSession = sequelize.define(
     currentState: {
       type: DataTypes.STRING(20),
       allowNull: false,
-      defaultValue: "desconectado",
+      defaultValue: UserState.DESCONECTADO,
       validate: {
-        isIn: [
-          ["desconectado", "activo", "baño", "almuerzo", "ausente", "licencia"],
-        ],
+        isIn: [[USER_STATE_VALUES]],
       },
       comment: COMMENTS.SESSION_CURRENT_STATE,
     },

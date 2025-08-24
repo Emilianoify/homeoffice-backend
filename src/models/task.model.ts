@@ -1,6 +1,12 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { COMMENTS } from "../utils/constants/messages/comments";
+import {
+  TASK_PRIORITY_VALUES,
+  TASK_STATUS_VALUES,
+} from "../utils/validators/validators";
+import { TaskPriority } from "../utils/enums/TaskPriority";
+import { TaskStatus } from "../utils/enums/TaskStatus";
 
 const Task = sequelize.define(
   "Task",
@@ -46,18 +52,18 @@ const Task = sequelize.define(
     priority: {
       type: DataTypes.STRING(10),
       allowNull: false,
-      defaultValue: "media",
+      defaultValue: TaskPriority.BAJA,
       validate: {
-        isIn: [["alta", "media", "baja"]],
+        isIn: [TASK_PRIORITY_VALUES],
       },
       comment: COMMENTS.TASK_PRIORITY,
     },
     status: {
       type: DataTypes.STRING(20),
       allowNull: false,
-      defaultValue: "pendiente",
+      defaultValue: TaskStatus.PENDIENTE,
       validate: {
-        isIn: [["pendiente", "en_progreso", "completada", "cancelada"]],
+        isIn: [TASK_STATUS_VALUES],
       },
       comment: COMMENTS.TASK_STATUS,
     },

@@ -96,7 +96,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const newSession = (await UserSession.create({
       userId: user.id,
       sessionStart: new Date(),
-      currentState: "desconectado", // Inicia desconectado, luego cambia a activo
+      currentState: UserState.DESCONECTADO, // Inicia desconectado, luego cambia a activo
       ipAddress,
       userAgent,
       nextPopupAt,
@@ -106,7 +106,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // 5. Actualizar estado del usuario
     await User.update(
       {
-        currentState: "desconectado", // Estará desconectado hasta que haga "Iniciar trabajo"
+        currentState: UserState.DESCONECTADO, // Estará desconectado hasta que haga "Iniciar trabajo"
         isInSession: true,
         currentSessionId: newSession.id,
         lastLogin: new Date(),
@@ -163,7 +163,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         corporative_email: user.corporative_email,
         sector: user.sector,
         isActive: user.isActive,
-        currentState: "desconectado",
+        currentState: UserState.DESCONECTADO,
         isInSession: true,
         productivityScore: user.productivityScore,
         popupFrequency: user.popupFrequency,
@@ -187,7 +187,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       workSession: {
         sessionId: newSession.id,
         sessionStart: newSession.sessionStart,
-        currentState: "desconectado",
+        currentState: UserState.DESCONECTADO,
         nextPopupAt: nextPopupAt,
         totalMinutesWorked: 0,
       },

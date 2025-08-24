@@ -44,6 +44,18 @@ export const SUCCESS_MESSAGES = {
     SESSION_PAUSED: "Sesión de trabajo pausada",
     SESSION_RESUMED: "Sesión de trabajo reanudada",
   },
+  POPUPS: {
+    POPUP_SENT: "Pop-up matemático generado",
+    HISTORY_RETRIEVED: "Historial de pop-ups obtenido",
+    POPUP_CORRECT: "Excelente trabajo. Puedes continuar con tus tareas.",
+    SECOND_CHANCE: "Segunda oportunidad",
+    POPUP_FIRST_TIMEOUT:
+      "Se agotó el tiempo. Aquí tienes una segunda oportunidad:",
+    POPUP_FIRST_ERROR:
+      "Respuesta incorrecta. Aquí tienes una segunda oportunidad:",
+    CLOSING_SESSION:
+      "Segundo error, cerrando sesion por inactividad o intentos fallidos",
+  },
   PATIENT: {
     PATIENT_CREATED: "Paciente creado correctamente.",
   },

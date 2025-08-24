@@ -1,6 +1,11 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { COMMENTS } from "../utils/constants/messages/comments";
+import {
+  STATE_CHANGED_BY_VALUES,
+  USER_STATE_VALUES,
+} from "../utils/validators/validators";
+import { StateChangedBy } from "../utils/enums/StateChangedBy";
 
 const UserStateModel = sequelize.define(
   "UserState",
@@ -33,9 +38,7 @@ const UserStateModel = sequelize.define(
       type: DataTypes.STRING(20),
       allowNull: false,
       validate: {
-        isIn: [
-          ["desconectado", "activo", "baño", "almuerzo", "ausente", "licencia"],
-        ],
+        isIn: [USER_STATE_VALUES],
       },
       comment: COMMENTS.STATE_VALUE,
     },
@@ -59,9 +62,9 @@ const UserStateModel = sequelize.define(
     changedBy: {
       type: DataTypes.STRING(20),
       allowNull: false,
-      defaultValue: "user",
+      defaultValue: StateChangedBy.USER,
       validate: {
-        isIn: [["user", "system", "admin", "timeout"]],
+        isIn: [STATE_CHANGED_BY_VALUES],
       },
       comment: COMMENTS.STATE_CHANGED_BY,
     },

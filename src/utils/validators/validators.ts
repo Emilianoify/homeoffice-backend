@@ -1,4 +1,5 @@
 import { PopupAction } from "../enums/PopupAction";
+import { PopupFrequency } from "../enums/PopupFrequency";
 import { PopupResult } from "../enums/PopupResult";
 import { StateChangedBy } from "../enums/StateChangedBy";
 import { TaskPriority } from "../enums/TaskPriority";
@@ -28,6 +29,7 @@ export const isValidUsername = (username: string): boolean => {
 export const USER_STATE_VALUES = Object.values(UserState);
 export const TASK_PRIORITY_VALUES = Object.values(TaskPriority);
 export const TASK_STATUS_VALUES = Object.values(TaskStatus);
+export const POPUP_FREQUENCY_VALUES = Object.values(PopupFrequency);
 export const POPUP_RESULT_VALUES = Object.values(PopupResult);
 export const POPUP_ACTION_VALUES = Object.values(PopupAction);
 export const STATE_CHANGED_BY_VALUES = Object.values(StateChangedBy);
