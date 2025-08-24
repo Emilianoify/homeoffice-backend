@@ -1,17 +1,15 @@
+import { TokenRevocationReason } from "../enums/TokenRevocationReason";
+
 interface RevokedToken {
   token: string;
   revokedAt: Date;
-  reason: "logout" | "password_change" | "security" | "admin";
+  reason: TokenRevocationReason;
 }
 
 interface UserTokenRevocation {
   userId: string;
   revokedAt: Date;
-  reason:
-    | "password_change"
-    | "security_breach"
-    | "admin_action"
-    | "admin_password_change";
+  reason: TokenRevocationReason;
 }
 
 // Blacklist de tokens específicos (sistema actual)
@@ -23,7 +21,7 @@ export const userTokenRevocations: UserTokenRevocation[] = [];
 // Función para revocar un token específico
 export function revokeToken(
   token: string,
-  reason: RevokedToken["reason"] = "logout",
+  reason: TokenRevocationReason = TokenRevocationReason.LOGOUT,
 ): void {
   revokedTokens.push({
     token,
@@ -38,7 +36,7 @@ export function revokeToken(
 // Función para revocar TODOS los tokens de un usuario
 export function revokeAllUserTokens(
   userId: string,
-  reason: UserTokenRevocation["reason"] = "password_change",
+  reason: TokenRevocationReason = TokenRevocationReason.PASSWORD_CHANGE,
 ): void {
   userTokenRevocations.push({
     userId,
@@ -102,7 +100,7 @@ function cleanOldUserRevocations(): void {
 
 // Funciones de compatibilidad con el sistema actual
 export function addToRevokedTokens(token: string): void {
-  revokeToken(token, "logout");
+  revokeToken(token, TokenRevocationReason.LOGOUT);
 }
 
 // Función para obtener estadísticas (útil para debugging)

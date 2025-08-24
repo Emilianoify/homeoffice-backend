@@ -20,7 +20,7 @@ export const changeState = async (
     const userId = req.user!.id;
 
     if (!newState || !USER_STATE_VALUES.includes(newState)) {
-      sendBadRequest(res, ERROR_MESSAGES.STATES.INVALID_STATE, "400");
+      sendBadRequest(res, ERROR_MESSAGES.STATES.INVALID_STATE);
       return;
     }
 
@@ -33,7 +33,7 @@ export const changeState = async (
     })) as any;
 
     if (!activeSession) {
-      sendBadRequest(res, ERROR_MESSAGES.STATES.NO_ACTIVE_SESSION, "400");
+      sendBadRequest(res, ERROR_MESSAGES.STATES.NO_ACTIVE_SESSION);
       return;
     }
 
@@ -99,7 +99,7 @@ export const changeState = async (
     );
 
     // Respuesta
-    sendSuccessResponse(res, SUCCESS_MESSAGES.STATES.STATE_CHANGED, "200", {
+    sendSuccessResponse(res, SUCCESS_MESSAGES.STATES.STATE_CHANGED, {
       newState,
       stateStart: now,
       sessionId: activeSession.id,

@@ -6,6 +6,7 @@ import {
   sendBadRequest,
   sendSuccessResponse,
   sendInternalErrorResponse,
+  sendConflict,
 } from "../../utils/commons/responseFunctions";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.messages";
@@ -36,11 +37,7 @@ export const updateProfile = async (
 
     // Verificar que al menos un campo esté presente para actualizar
     if (!username && !firstname && !lastname && !corporative_email) {
-      return sendBadRequest(
-        res,
-        ERROR_MESSAGES.USER.NO_FIELDS_TO_UPDATE,
-        "400",
-      );
+      return sendBadRequest(res, ERROR_MESSAGES.USER.NO_FIELDS_TO_UPDATE);
     }
 
     // Preparar objeto de actualización
@@ -49,15 +46,11 @@ export const updateProfile = async (
     // Validar y preparar username si se proporciona
     if (username !== undefined) {
       if (!username.trim()) {
-        return sendBadRequest(res, ERROR_MESSAGES.USER.EMPTY_USERNAME, "400");
+        return sendBadRequest(res, ERROR_MESSAGES.USER.EMPTY_USERNAME);
       }
 
       if (!isValidUsername(username)) {
-        return sendBadRequest(
-          res,
-          ERROR_MESSAGES.AUTH.INVALID_USERNAME_FORMAT,
-          "400",
-        );
+        return sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_USERNAME_FORMAT);
       }
 
       // Verificar que el username no esté en uso por otro usuario
@@ -67,7 +60,7 @@ export const updateProfile = async (
       })) as IUser | null;
 
       if (existingUser && existingUser.id !== userId) {
-        return sendBadRequest(res, ERROR_MESSAGES.AUTH.USERNAME_IN_USE, "409");
+        return sendConflict(res, ERROR_MESSAGES.AUTH.USERNAME_IN_USE);
       }
 
       updateData.username = username.trim();
@@ -76,15 +69,11 @@ export const updateProfile = async (
     // Validar y preparar email si se proporciona
     if (corporative_email !== undefined) {
       if (!corporative_email.trim()) {
-        return sendBadRequest(res, ERROR_MESSAGES.USER.EMPTY_EMAIL, "400");
+        return sendBadRequest(res, ERROR_MESSAGES.USER.EMPTY_EMAIL);
       }
 
       if (!isValidEmail(corporative_email)) {
-        return sendBadRequest(
-          res,
-          ERROR_MESSAGES.AUTH.INVALID_EMAIL_FORMAT,
-          "400",
-        );
+        return sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_EMAIL_FORMAT);
       }
 
       // Verificar que el email no esté en uso por otro usuario
@@ -94,7 +83,7 @@ export const updateProfile = async (
       })) as IUser | null;
 
       if (existingEmail && existingEmail.id !== userId) {
-        sendBadRequest(res, ERROR_MESSAGES.AUTH.EMAIL_IN_USE, "409");
+        sendConflict(res, ERROR_MESSAGES.AUTH.EMAIL_IN_USE);
         return;
       }
 
@@ -104,7 +93,7 @@ export const updateProfile = async (
     // Validar y preparar nombres si se proporcionan
     if (firstname !== undefined) {
       if (!firstname.trim() || firstname.trim().length < 2) {
-        sendBadRequest(res, ERROR_MESSAGES.USER.INVALID_FIRSTNAME, "400");
+        sendBadRequest(res, ERROR_MESSAGES.USER.INVALID_FIRSTNAME);
         return;
       }
       updateData.firstname = firstname.trim();
@@ -112,7 +101,7 @@ export const updateProfile = async (
 
     if (lastname !== undefined) {
       if (!lastname.trim() || lastname.trim().length < 2) {
-        sendBadRequest(res, ERROR_MESSAGES.USER.INVALID_LASTNAME, "400");
+        sendBadRequest(res, ERROR_MESSAGES.USER.INVALID_LASTNAME);
         return;
       }
       updateData.lastname = lastname.trim();
@@ -136,7 +125,7 @@ export const updateProfile = async (
     })) as IUser | null;
 
     if (!updatedUser) {
-      sendBadRequest(res, ERROR_MESSAGES.USER.UPDATE_FAILED, "500");
+      sendInternalErrorResponse(res);
       return;
     }
 
@@ -170,7 +159,7 @@ export const updateProfile = async (
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.USER.PROFILE_UPDATED,
-      "200",
+
       responseData,
     );
   } catch (error) {

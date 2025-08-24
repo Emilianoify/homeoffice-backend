@@ -26,7 +26,7 @@ export const forgotPassword = async (
 
     // Validación de campo requerido
     if (!identifier) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.IDENTIFIER_REQUIRED, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.IDENTIFIER_REQUIRED);
       return;
     }
 
@@ -50,7 +50,7 @@ export const forgotPassword = async (
       sendSuccessResponse(
         res,
         SUCCESS_MESSAGES.AUTH.RECOVERY_EMAIL_SENT,
-        "200",
+
         {
           message: COMMENTS.IF_USER_EXISTS,
           estimatedDelivery: COMMENTS.RECOVERY_EMAIL_DELIVERY,
@@ -64,7 +64,7 @@ export const forgotPassword = async (
       sendSuccessResponse(
         res,
         SUCCESS_MESSAGES.AUTH.RECOVERY_EMAIL_SENT,
-        "200",
+
         {
           message: COMMENTS.IF_USER_EXISTS,
           estimatedDelivery: COMMENTS.RECOVERY_EMAIL_DELIVERY,
@@ -78,7 +78,7 @@ export const forgotPassword = async (
       sendSuccessResponse(
         res,
         SUCCESS_MESSAGES.AUTH.RECOVERY_EMAIL_SENT,
-        "200",
+
         {
           message: COMMENTS.IF_USER_EXISTS,
           estimatedDelivery: COMMENTS.RECOVERY_EMAIL_DELIVERY,
@@ -114,7 +114,7 @@ export const forgotPassword = async (
       `🔑 Token generado para ${user.username}: ${recoveryToken} (expira: ${tokenExpiration})`,
     );
 
-    sendSuccessResponse(res, SUCCESS_MESSAGES.AUTH.RECOVERY_EMAIL_SENT, "200", {
+    sendSuccessResponse(res, SUCCESS_MESSAGES.AUTH.RECOVERY_EMAIL_SENT, {
       message: COMMENTS.IF_USER_EXISTS,
       estimatedDelivery: COMMENTS.RECOVERY_EMAIL_DELIVERY,
       // En desarrollo, incluir token para testing

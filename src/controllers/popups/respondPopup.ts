@@ -7,6 +7,7 @@ import {
 import {
   sendBadRequest,
   sendInternalErrorResponse,
+  sendNotFound,
 } from "../../utils/commons/responseFunctions";
 import { Response } from "express";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
@@ -23,7 +24,7 @@ export const respondPopup = async (
 
     // Validaciones
     if (!popupId || userAnswer === undefined || userAnswer === null) {
-      sendBadRequest(res, ERROR_MESSAGES.POPUPS.MISSING_FIELDS, "400");
+      sendBadRequest(res, ERROR_MESSAGES.POPUPS.MISSING_FIELDS);
       return;
     }
 
@@ -37,7 +38,7 @@ export const respondPopup = async (
     })) as any;
 
     if (!popup) {
-      sendBadRequest(res, ERROR_MESSAGES.POPUPS.NOT_FOUND, "404");
+      sendNotFound(res, ERROR_MESSAGES.POPUPS.NOT_FOUND);
       return;
     }
 

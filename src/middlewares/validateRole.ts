@@ -1,6 +1,7 @@
 import { Response, NextFunction } from "express";
 import { ERROR_MESSAGES } from "../utils/constants/messages/error.messages";
 import { AuthRequest } from "../interfaces/auth.interface";
+import { UserRole } from "../utils/enums/UserRole";
 
 export const validateRole = (allowedRoles: string | string[]) => {
   return async (
@@ -64,21 +65,82 @@ export const validateRole = (allowedRoles: string | string[]) => {
   };
 };
 
-// Middlewares predefinidos para roles específicos
-export const requireAdmin = validateRole("Administrador");
-export const requireCoordination = validateRole("Coordinación");
-export const requireAccounting = validateRole(["Contaduría", "Administrador"]);
-export const requirePurchasing = validateRole(["Compras", "Administrador"]);
-export const requirePayroll = validateRole(["Liquidaciones", "Administrador"]);
-export const requireProfessional = validateRole("Profesionales");
+// Middlewares predefinidos para roles específicos usando enums
+export const requireAdmin = validateRole(UserRole.ADMINISTRADOR);
+export const requireCoordination = validateRole(UserRole.COORDINACION);
+export const requireAccounting = validateRole([
+  UserRole.CONTADURIA,
+  UserRole.ADMINISTRADOR,
+]);
+export const requirePurchasing = validateRole([
+  UserRole.COMPRAS,
+  UserRole.ADMINISTRADOR,
+]);
+export const requirePayroll = validateRole([
+  UserRole.LIQUIDACIONES,
+  UserRole.ADMINISTRADOR,
+]);
+export const requireProfessional = validateRole(UserRole.PROFESIONALES);
 
-// Middleware para múltiples roles administrativos
+// ===== NUEVOS ROLES PARA HOME OFFICE =====
+export const requireSectorCoordinator = validateRole(
+  UserRole.COORDINADOR_SECTOR,
+);
+export const requireBilling = validateRole([
+  UserRole.FACTURACION,
+  UserRole.ADMINISTRADOR,
+]);
+export const requireHR = validateRole([
+  UserRole.RECURSOS_HUMANOS,
+  UserRole.ADMINISTRADOR,
+]);
+export const requireComplaints = validateRole([
+  UserRole.RECLAMOS,
+  UserRole.ADMINISTRADOR,
+]);
+export const requireReception = validateRole([
+  UserRole.RECEPCION,
+  UserRole.ADMINISTRADOR,
+]);
+
+// Middleware para múltiples roles administrativos (ACTUALIZADO con nuevos roles)
 export const requireAdminRoles = validateRole([
-  "Administrador",
-  "Coordinación",
-  "Contaduría",
-  "Compras",
-  "Liquidaciones",
+  UserRole.ADMINISTRADOR,
+  UserRole.COORDINACION,
+  UserRole.CONTADURIA,
+  UserRole.COMPRAS,
+  UserRole.LIQUIDACIONES,
+  UserRole.RECURSOS_HUMANOS,
+]);
+
+// Middleware para coordinadores (incluye coordinador general y de sector)
+export const requireAnyCoordinator = validateRole([
+  UserRole.COORDINACION,
+  UserRole.COORDINADOR_SECTOR,
+  UserRole.ADMINISTRADOR,
+]);
+
+// Middleware para roles que pueden asignar tareas
+export const requireTaskAssigner = validateRole([
+  UserRole.COORDINADOR_SECTOR,
+  UserRole.COORDINACION,
+  UserRole.ADMINISTRADOR,
+]);
+
+// Middleware para roles que pueden ver reportes de productividad
+export const requireProductivityViewer = validateRole([
+  UserRole.RECURSOS_HUMANOS,
+  UserRole.COORDINADOR_SECTOR,
+  UserRole.COORDINACION,
+  UserRole.ADMINISTRADOR,
+]);
+
+// Middleware para acceso a funciones financieras
+export const requireFinancialAccess = validateRole([
+  UserRole.CONTADURIA,
+  UserRole.FACTURACION,
+  UserRole.LIQUIDACIONES,
+  UserRole.ADMINISTRADOR,
 ]);
 
 export default validateRole;

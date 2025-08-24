@@ -7,11 +7,15 @@ import {
   sendBadRequest,
   sendSuccessResponse,
   sendInternalErrorResponse,
+  sendNotFound,
+  sendConflict,
 } from "../../utils/commons/responseFunctions";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.messages";
 import { isValidPassword } from "../../utils/validators/validators";
 import { revokeAllUserTokens } from "../../utils/commons/tokenManager";
+import { TokenRevocationReason } from "../../utils/enums/TokenRevocationReason";
+import { UserRole } from "../../utils/enums/UserRole";
 
 interface AdminChangePasswordRequest {
   newPassword: string;
@@ -29,18 +33,18 @@ export const changeUserPassword = async (
 
     // Validación de parámetros
     if (!targetUserId) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.USER_ID_REQUIRED, "400");
+      sendBadRequest(res, ERROR_MESSAGES.ADMIN.USER_ID_REQUIRED);
       return;
     }
 
     if (!newPassword) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.NEW_PASSWORD_REQUIRED, "400");
+      sendBadRequest(res, ERROR_MESSAGES.ADMIN.NEW_PASSWORD_REQUIRED);
       return;
     }
 
     // Validación de fortaleza de nueva contraseña
     if (!isValidPassword(newPassword)) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.WEAK_PASSWORD, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.WEAK_PASSWORD);
       return;
     }
 
@@ -66,19 +70,19 @@ export const changeUserPassword = async (
     })) as IUser | null;
 
     if (!targetUser) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.TARGET_USER_NOT_FOUND, "404");
+      sendNotFound(res, ERROR_MESSAGES.USER.USER_NOT_FOUND);
       return;
     }
 
     // Verificar que el usuario objetivo esté activo
     if (!targetUser.isActive) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.TARGET_USER_INACTIVE, "400");
+      sendBadRequest(res, ERROR_MESSAGES.ADMIN.TARGET_USER_INACTIVE);
       return;
     }
 
     // Seguridad: Prevenir que un admin cambie la contraseña de otro admin
     // a menos que sea un super admin (opcional, por ahora solo logging)
-    if (targetUser.role?.name === "Administrador") {
+    if (targetUser.role?.name === UserRole.ADMINISTRADOR) {
       console.log(
         `⚠️  ADVERTENCIA: Admin ${req.user!.username} está cambiando contraseña de otro admin: ${targetUser.username}`,
       );
@@ -90,7 +94,7 @@ export const changeUserPassword = async (
       targetUser.password!,
     );
     if (isSamePassword) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.SAME_PASSWORD, "400");
+      sendConflict(res, ERROR_MESSAGES.AUTH.SAME_PASSWORD);
       return;
     }
 
@@ -108,7 +112,10 @@ export const changeUserPassword = async (
     );
 
     // Revocar todos los tokens del usuario objetivo
-    revokeAllUserTokens(targetUserId, "admin_password_change");
+    revokeAllUserTokens(
+      targetUserId,
+      TokenRevocationReason.ADMIN_PASSWORD_CHANGE,
+    );
 
     // Log de seguridad detallado
     console.log(`🔐 [ADMIN ACTION] Contraseña cambiada por administrador:`);
@@ -126,7 +133,7 @@ export const changeUserPassword = async (
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.ADMIN.PASSWORD_CHANGED_SUCCESS,
-      "200",
+
       {
         message: "Contraseña actualizada correctamente por administrador",
         targetUser: {

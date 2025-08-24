@@ -6,6 +6,7 @@ import {
   sendBadRequest,
   sendSuccessResponse,
   sendInternalErrorResponse,
+  sendNotFound,
 } from "../../utils/commons/responseFunctions";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.messages";
@@ -34,13 +35,13 @@ export const getProfile = async (
 
     // Verificar que el usuario exista (por si fue eliminado después del login)
     if (!user) {
-      sendBadRequest(res, ERROR_MESSAGES.USER.USER_NOT_FOUND, "404");
+      sendNotFound(res, ERROR_MESSAGES.USER.USER_NOT_FOUND);
       return;
     }
 
     // Verificar que el usuario siga activo
     if (!user.isActive) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_INACTIVE, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_INACTIVE);
       return;
     }
 
@@ -70,7 +71,7 @@ export const getProfile = async (
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.USER.PROFILE_RETRIEVED,
-      "200",
+
       profileData,
     );
   } catch (error) {

@@ -1,9 +1,9 @@
 import { AuthRequest } from "../../interfaces/auth.interface";
 import { User, UserSession, UserStateModel } from "../../models";
 import {
-  sendBadRequest,
   sendSuccessResponse,
   sendInternalErrorResponse,
+  sendNotFound,
 } from "../../utils/commons/responseFunctions";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { Response } from "express";
@@ -38,7 +38,7 @@ export const getCurrentState = async (
     })) as any;
 
     if (!user) {
-      sendBadRequest(res, ERROR_MESSAGES.USER.USER_NOT_FOUND, "404");
+      sendNotFound(res, ERROR_MESSAGES.USER.USER_NOT_FOUND);
       return;
     }
 
@@ -57,7 +57,7 @@ export const getCurrentState = async (
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.STATES.CURRENT_STATE_RETRIEVED,
-      "200",
+
       {
         currentState: user.currentState,
         isInSession: user.isInSession,

@@ -6,6 +6,8 @@ import {
   sendBadRequest,
   sendSuccessResponse,
   sendInternalErrorResponse,
+  sendNotFound,
+  sendUnauthorized,
 } from "../../utils/commons/responseFunctions";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.messages";
@@ -32,7 +34,7 @@ export const refreshToken = async (
 
     // Validación de campo requerido
     if (!token) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.REFRESH_TOKEN_REQUIRED, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.REFRESH_TOKEN_REQUIRED);
       return;
     }
 
@@ -48,13 +50,13 @@ export const refreshToken = async (
 
     // Validar que sea un refresh token
     if (decoded.type !== "refresh") {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_TOKEN_TYPE, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_TOKEN_TYPE);
       return;
     }
 
     // Verificar si el token está revocado
     if (isTokenRevoked(token, decoded.id, decoded.iat)) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.TOKEN_REVOKED, "401");
+      sendUnauthorized(res, ERROR_MESSAGES.AUTH.TOKEN_REVOKED);
       return;
     }
 
@@ -75,19 +77,19 @@ export const refreshToken = async (
 
     // Verificar que el usuario exista
     if (!user) {
-      sendBadRequest(res, ERROR_MESSAGES.USER.USER_NOT_FOUND, "404");
+      sendNotFound(res, ERROR_MESSAGES.USER.USER_NOT_FOUND);
       return;
     }
 
     // Verificar que el usuario esté activo
     if (!user.isActive) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_INACTIVE, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_INACTIVE);
       return;
     }
 
     // Verificar que el rol esté activo
     if (!user.role?.isActive) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.ROLE_INACTIVE, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.ROLE_INACTIVE);
       return;
     }
 
@@ -130,17 +132,17 @@ export const refreshToken = async (
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.AUTH.TOKEN_REFRESHED,
-      "200",
+
       responseData,
     );
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.REFRESH_TOKEN_EXPIRED, "401");
+      sendUnauthorized(res, ERROR_MESSAGES.AUTH.REFRESH_TOKEN_EXPIRED);
       return;
     }
 
     if (error instanceof jwt.JsonWebTokenError) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_REFRESH_TOKEN, "401");
+      sendUnauthorized(res, ERROR_MESSAGES.AUTH.INVALID_REFRESH_TOKEN);
       return;
     }
 

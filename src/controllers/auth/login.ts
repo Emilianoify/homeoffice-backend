@@ -25,7 +25,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const { username, password }: LoginRequest = req.body;
 
     if (!username || !password) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.MISSING_CREDENTIALS, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.MISSING_CREDENTIALS);
       return;
     }
     const user = (await User.findOne({
@@ -41,26 +41,26 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     // Verificar que el usuario exista
     if (!user) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
       return;
     }
 
     // Verificar que el usuario esté activo
     if (!user.isActive) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_INACTIVE, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_INACTIVE);
       return;
     }
 
     // Verificar que el rol esté activo
     if (!user.role?.isActive) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.ROLE_INACTIVE, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.ROLE_INACTIVE);
       return;
     }
 
     // Verificar la contraseña
     const isPasswordValid = await bcrypt.compare(password, user.password!);
     if (!isPasswordValid) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
       return;
     }
 
@@ -196,7 +196,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS,
-      "200",
+
       responseData,
     );
   } catch (error) {

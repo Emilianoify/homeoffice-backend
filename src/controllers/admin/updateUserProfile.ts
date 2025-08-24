@@ -6,6 +6,8 @@ import {
   sendBadRequest,
   sendSuccessResponse,
   sendInternalErrorResponse,
+  sendNotFound,
+  sendConflict,
 } from "../../utils/commons/responseFunctions";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.messages";
@@ -43,7 +45,7 @@ export const updateUserProfile = async (
 
     // Validación de parámetros
     if (!targetUserId) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.USER_ID_REQUIRED, "400");
+      sendBadRequest(res, ERROR_MESSAGES.ADMIN.USER_ID_REQUIRED);
       return;
     }
 
@@ -56,7 +58,7 @@ export const updateUserProfile = async (
       !roleId &&
       !sector
     ) {
-      sendBadRequest(res, ERROR_MESSAGES.USER.NO_FIELDS_TO_UPDATE, "400");
+      sendBadRequest(res, ERROR_MESSAGES.USER.NO_FIELDS_TO_UPDATE);
       return;
     }
 
@@ -82,7 +84,7 @@ export const updateUserProfile = async (
     })) as IUser | null;
 
     if (!targetUser) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.TARGET_USER_NOT_FOUND, "404");
+      sendNotFound(res, ERROR_MESSAGES.ADMIN.TARGET_USER_NOT_FOUND);
       return;
     }
 
@@ -93,12 +95,12 @@ export const updateUserProfile = async (
     // Validar y preparar username si se proporciona
     if (username !== undefined) {
       if (!username.trim()) {
-        sendBadRequest(res, ERROR_MESSAGES.USER.EMPTY_USERNAME, "400");
+        sendBadRequest(res, ERROR_MESSAGES.USER.EMPTY_USERNAME);
         return;
       }
 
       if (!isValidUsername(username)) {
-        sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_USERNAME_FORMAT, "400");
+        sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_USERNAME_FORMAT);
         return;
       }
 
@@ -109,7 +111,7 @@ export const updateUserProfile = async (
       })) as IUser | null;
 
       if (existingUser && existingUser.id !== targetUserId) {
-        sendBadRequest(res, ERROR_MESSAGES.AUTH.USERNAME_IN_USE, "409");
+        sendConflict(res, ERROR_MESSAGES.AUTH.USERNAME_IN_USE);
         return;
       }
 
@@ -124,12 +126,12 @@ export const updateUserProfile = async (
     // Validar y preparar email si se proporciona
     if (corporative_email !== undefined) {
       if (!corporative_email.trim()) {
-        sendBadRequest(res, ERROR_MESSAGES.USER.EMPTY_EMAIL, "400");
+        sendBadRequest(res, ERROR_MESSAGES.USER.EMPTY_EMAIL);
         return;
       }
 
       if (!isValidEmail(corporative_email)) {
-        sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_EMAIL_FORMAT, "400");
+        sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_EMAIL_FORMAT);
         return;
       }
 
@@ -140,7 +142,7 @@ export const updateUserProfile = async (
       })) as IUser | null;
 
       if (existingEmail && existingEmail.id !== targetUserId) {
-        sendBadRequest(res, ERROR_MESSAGES.AUTH.EMAIL_IN_USE, "409");
+        sendConflict(res, ERROR_MESSAGES.AUTH.EMAIL_IN_USE);
         return;
       }
 
@@ -154,7 +156,7 @@ export const updateUserProfile = async (
     // Validar y preparar nombres si se proporcionan
     if (firstname !== undefined) {
       if (!firstname.trim() || firstname.trim().length < 2) {
-        sendBadRequest(res, ERROR_MESSAGES.USER.INVALID_FIRSTNAME, "400");
+        sendBadRequest(res, ERROR_MESSAGES.USER.INVALID_FIRSTNAME);
         return;
       }
 
@@ -168,7 +170,7 @@ export const updateUserProfile = async (
 
     if (lastname !== undefined) {
       if (!lastname.trim() || lastname.trim().length < 2) {
-        sendBadRequest(res, ERROR_MESSAGES.USER.INVALID_LASTNAME, "400");
+        sendBadRequest(res, ERROR_MESSAGES.USER.INVALID_LASTNAME);
         return;
       }
 
@@ -186,12 +188,12 @@ export const updateUserProfile = async (
         // Verificar que el nuevo rol exista y esté activo
         const newRole = (await Role.findByPk(roleId)) as IRole | null;
         if (!newRole) {
-          sendBadRequest(res, ERROR_MESSAGES.AUTH.ROLE_NOT_FOUND, "404");
+          sendNotFound(res, ERROR_MESSAGES.AUTH.ROLE_NOT_FOUND);
           return;
         }
 
         if (!newRole.isActive) {
-          sendBadRequest(res, ERROR_MESSAGES.AUTH.ROLE_INACTIVE, "400");
+          sendBadRequest(res, ERROR_MESSAGES.AUTH.ROLE_INACTIVE);
           return;
         }
 
@@ -202,11 +204,11 @@ export const updateUserProfile = async (
 
     if (sector !== undefined) {
       if (!Object.values(Sector).includes(sector)) {
-        sendBadRequest(res, ERROR_MESSAGES.AUTH.SECTOR_NOT_FOUND, "400");
+        sendNotFound(res, ERROR_MESSAGES.AUTH.SECTOR_NOT_FOUND);
         return;
       }
       if (sector === targetUser.sector) {
-        sendBadRequest(res, ERROR_MESSAGES.AUTH.SAME_SECTOR, "400");
+        sendConflict(res, ERROR_MESSAGES.AUTH.SAME_SECTOR);
         return;
       }
       updateData.sector = sector;
@@ -217,7 +219,7 @@ export const updateUserProfile = async (
       sendSuccessResponse(
         res,
         SUCCESS_MESSAGES.ADMIN.NO_CHANGES_DETECTED,
-        "200",
+
         {
           message: "No se detectaron cambios en los datos proporcionados",
           targetUser: {
@@ -247,7 +249,7 @@ export const updateUserProfile = async (
     })) as IUser | null;
 
     if (!updatedUser) {
-      sendBadRequest(res, ERROR_MESSAGES.USER.UPDATE_FAILED, "500");
+      sendInternalErrorResponse(res);
       return;
     }
 
@@ -292,7 +294,7 @@ export const updateUserProfile = async (
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.ADMIN.USER_PROFILE_UPDATED,
-      "200",
+
       responseData,
     );
   } catch (error) {

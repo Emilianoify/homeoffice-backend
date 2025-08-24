@@ -6,11 +6,13 @@ import {
   sendBadRequest,
   sendSuccessResponse,
   sendInternalErrorResponse,
+  sendNotFound,
 } from "../../utils/commons/responseFunctions";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.messages";
 import { isValidPassword } from "../../utils/validators/validators";
 import { revokeAllUserTokens } from "../../utils/commons/tokenManager";
+import { TokenRevocationReason } from "../../utils/enums/TokenRevocationReason";
 
 interface ChangePasswordRequest {
   currentPassword: string;
@@ -27,19 +29,19 @@ export const changePassword = async (
 
     // Validación de campos requeridos
     if (!currentPassword || !newPassword) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.MISSING_PASSWORD_FIELDS, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.MISSING_PASSWORD_FIELDS);
       return;
     }
 
     // Validación de fortaleza de nueva contraseña
     if (!isValidPassword(newPassword)) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.WEAK_PASSWORD, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.WEAK_PASSWORD);
       return;
     }
 
     // Verificar que las contraseñas sean diferentes
     if (currentPassword === newPassword) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.SAME_PASSWORD, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.SAME_PASSWORD);
       return;
     }
 
@@ -55,13 +57,13 @@ export const changePassword = async (
     })) as any;
 
     if (!user) {
-      sendBadRequest(res, ERROR_MESSAGES.USER.USER_NOT_FOUND, "404");
+      sendNotFound(res, ERROR_MESSAGES.USER.USER_NOT_FOUND);
       return;
     }
 
     // Verificar que el usuario siga activo
     if (!user.isActive) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_INACTIVE, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_INACTIVE);
       return;
     }
 
@@ -71,7 +73,7 @@ export const changePassword = async (
       user.password,
     );
     if (!isCurrentPasswordValid) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_CURRENT_PASSWORD, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_CURRENT_PASSWORD);
       return;
     }
 
@@ -81,7 +83,7 @@ export const changePassword = async (
       user.password,
     );
     if (isSameAsCurrentPassword) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.SAME_PASSWORD, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.SAME_PASSWORD);
       return;
     }
 
@@ -100,13 +102,13 @@ export const changePassword = async (
 
     // Revocar todos los tokens del usuario por seguridad
     // Esto fuerza logout en todos los dispositivos
-    revokeAllUserTokens(userId, "password_change");
+    revokeAllUserTokens(userId, TokenRevocationReason.PASSWORD_CHANGE);
 
     // Respuesta exitosa (sin datos sensibles)
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.AUTH.PASSWORD_CHANGED_SUCCESS,
-      "200",
+
       {
         message: "Contraseña actualizada correctamente",
         timestamp: new Date().toISOString(),

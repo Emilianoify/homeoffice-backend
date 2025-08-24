@@ -21,7 +21,7 @@ export async function handlePopupSuccess(
     { where: { id: popup.sessionId } },
   );
 
-  sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.POPUP_CORRECT, "200", {
+  sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.POPUP_CORRECT, {
     result: PopupResult.CORRECT,
     message: "Excelente trabajo. Puedes continuar trabajando.",
     nextPopupIn: "Se calculará automáticamente",
@@ -50,7 +50,7 @@ export async function handlePopupFailure(
       previousPopupId: popup.id,
     });
 
-    sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.SECOND_CHANCE, "200", {
+    sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.SECOND_CHANCE, {
       result: PopupAction.SECOND_CHANCE,
       message:
         failureType === PopupResult.TIMEOUT
@@ -67,7 +67,7 @@ export async function handlePopupFailure(
     // Segunda falla: cerrar sesión
     // TODO: Implementar cierre de sesión
 
-    sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.CLOSING_SESSION, "200", {
+    sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.CLOSING_SESSION, {
       result: PopupResult.SESSION_CLOSED,
       message: "Se cerró la sesión por fallar dos veces seguidas.",
       action: "logout_required",

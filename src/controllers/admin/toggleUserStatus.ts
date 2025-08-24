@@ -6,12 +6,15 @@ import {
   sendBadRequest,
   sendSuccessResponse,
   sendInternalErrorResponse,
+  sendNotFound,
+  sendConflict,
 } from "../../utils/commons/responseFunctions";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.messages";
 import { revokeAllUserTokens } from "../../utils/commons/tokenManager";
 import { UserState } from "../../utils/enums/UserState";
 import { StateChangedBy } from "../../utils/enums/StateChangedBy";
+import { TokenRevocationReason } from "../../utils/enums/TokenRevocationReason";
 
 interface ToggleStatusRequest {
   reason?: string;
@@ -31,20 +34,20 @@ export const toggleUserStatus = async (
 
     // Validación de parámetros
     if (!targetUserId) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.USER_ID_REQUIRED, "400");
+      sendBadRequest(res, ERROR_MESSAGES.ADMIN.USER_ID_REQUIRED);
       return;
     }
 
     // Validación de razón (solo requerida para desactivación)
     // Nota: Considera si realmente necesitas razón para activación también
     if (!reason || reason.trim() === "") {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.CHANGE_REASON_REQUIRED, "400");
+      sendBadRequest(res, ERROR_MESSAGES.ADMIN.CHANGE_REASON_REQUIRED);
       return;
     }
 
     // Prevenir que un admin se desactive a sí mismo
     if (targetUserId === adminUserId) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.SAME_TARGET_USER, "403");
+      sendConflict(res, ERROR_MESSAGES.ADMIN.SAME_TARGET_USER);
       return;
     }
 
@@ -72,7 +75,7 @@ export const toggleUserStatus = async (
     })) as IUser | null;
 
     if (!targetUser) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.TARGET_USER_NOT_FOUND, "404");
+      sendNotFound(res, ERROR_MESSAGES.ADMIN.TARGET_USER_NOT_FOUND);
       return;
     }
 
@@ -157,7 +160,7 @@ export const toggleUserStatus = async (
       }
 
       // Revocar todos los tokens del usuario
-      revokeAllUserTokens(targetUserId, "admin_action");
+      revokeAllUserTokens(targetUserId, TokenRevocationReason.ADMIN_ACTION);
     }
 
     // ===== ACTUALIZAR ESTADO DEL USUARIO =====
@@ -191,7 +194,7 @@ export const toggleUserStatus = async (
     })) as IUser | null;
 
     if (!updatedUser) {
-      sendBadRequest(res, ERROR_MESSAGES.USER.UPDATE_FAILED, "500");
+      sendInternalErrorResponse(res);
       return;
     }
 
@@ -244,7 +247,7 @@ export const toggleUserStatus = async (
       ? SUCCESS_MESSAGES.ADMIN.USER_ACTIVATED
       : SUCCESS_MESSAGES.ADMIN.USER_DEACTIVATED;
 
-    sendSuccessResponse(res, successMessage, "200", responseData);
+    sendSuccessResponse(res, successMessage, responseData);
   } catch (error) {
     console.error("Error en toggleUserStatus:", error);
     sendInternalErrorResponse(res);

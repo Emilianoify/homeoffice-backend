@@ -11,6 +11,7 @@ import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.message
 import { Response } from "express";
 import { UserState } from "../../utils/enums/UserState";
 import { StateChangedBy } from "../../utils/enums/StateChangedBy";
+import { TokenRevocationReason } from "../../utils/enums/TokenRevocationReason";
 
 export const logout = async (
   req: AuthRequest,
@@ -21,7 +22,7 @@ export const logout = async (
     const token = req.rawToken;
 
     if (!token) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.TOKEN_REQUIRED, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.TOKEN_REQUIRED);
       return;
     }
 
@@ -132,7 +133,7 @@ export const logout = async (
     }
 
     // Revocar el token JWT
-    revokeToken(token, "logout");
+    revokeToken(token, TokenRevocationReason.LOGOUT);
 
     // Actualizar lastLogin del usuario (para tracking)
     await User.update({ lastLogin: now }, { where: { id: userId } });
@@ -153,7 +154,7 @@ export const logout = async (
         }
       : null;
 
-    sendSuccessResponse(res, SUCCESS_MESSAGES.AUTH.LOGOUT_SUCCESS, "200", {
+    sendSuccessResponse(res, SUCCESS_MESSAGES.AUTH.LOGOUT_SUCCESS, {
       message: SUCCESS_MESSAGES.AUTH.LOGOUT_SUCCESS,
       timestamp: now.toISOString(),
       sessionSummary,

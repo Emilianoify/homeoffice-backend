@@ -15,7 +15,7 @@ export const getTeamStates = async (
 ): Promise<void> => {
   try {
     if (!req.user || !req.user.sector) {
-      sendBadRequest(res, ERROR_MESSAGES.USER.EMPTY_SECTOR, "400");
+      sendBadRequest(res, ERROR_MESSAGES.USER.EMPTY_SECTOR);
       return;
     }
 
@@ -82,7 +82,7 @@ export const getTeamStates = async (
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.STATES.TEAM_STATES_RETRIEVED,
-      "200",
+
       {
         sector: userSector,
         teamStates,

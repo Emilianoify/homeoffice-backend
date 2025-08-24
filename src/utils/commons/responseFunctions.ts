@@ -1,4 +1,6 @@
 import { Response } from "express";
+import { ERROR_MESSAGES } from "../constants/messages/error.messages";
+import { HttpStatusCode } from "../enums/HttpStatusCode";
 
 interface ApiResponse<T = any> {
   payload?: {
@@ -8,42 +10,43 @@ interface ApiResponse<T = any> {
   };
 }
 
-export function sendBadRequest(
+export function sendResponse<T>(
   res: Response,
+  statusCode: HttpStatusCode,
   message: string,
-  code: string = "400",
-): void {
-  const response: ApiResponse = {
-    payload: {
-      code: code,
-      message: message,
-    },
-  };
-  res.status(400).send(response);
-}
-
-export function sendSuccessResponse<T>(
-  res: Response,
-  message: string,
-  code: string = "200",
   data?: T,
 ): void {
-  const response: ApiResponse = {
+  const response: ApiResponse<T> = {
     payload: {
-      code: code,
+      code: statusCode.toString(),
       message: message,
       data: data,
     },
   };
-  res.status(201).send(response);
+  res.status(statusCode).send(response);
 }
 
-export function sendInternalErrorResponse(res: Response): void {
-  const response: ApiResponse = {
-    payload: {
-      code: "500",
-      message: "Internal server error",
-    },
-  };
-  res.status(500).send(response);
-}
+export const sendBadRequest = (res: Response, message: string) =>
+  sendResponse(res, HttpStatusCode.BAD_REQUEST, message);
+
+export const sendNotFound = (res: Response, message: string) =>
+  sendResponse(res, HttpStatusCode.NOT_FOUND, message);
+
+export const sendConflict = (res: Response, message: string) =>
+  sendResponse(res, HttpStatusCode.CONFLICT, message);
+
+export const sendSuccessResponse = <T>(
+  res: Response,
+  message: string,
+  data?: T,
+) => sendResponse(res, HttpStatusCode.CREATED, message, data);
+
+export const sendInternalErrorResponse = (res: Response) =>
+  sendResponse(
+    res,
+    HttpStatusCode.INTERNAL_SERVER_ERROR,
+    ERROR_MESSAGES.SERVER.INTERNAL_ERROR,
+  );
+
+export const sendUnauthorized = (res: Response, message: string) =>
+  sendResponse(res, HttpStatusCode.UNAUTHORIZED, message);

@@ -45,11 +45,7 @@ export const listUsers = async (
     const limitNum = parseInt(limit);
 
     if (pageNum < 1 || limitNum < 1 || limitNum > 100) {
-      sendBadRequest(
-        res,
-        ERROR_MESSAGES.SERVER.INVALID_PAGINATION_PARAMETERS,
-        "400",
-      );
+      sendBadRequest(res, ERROR_MESSAGES.SERVER.INVALID_PAGINATION_PARAMETERS);
       return;
     }
 
@@ -186,7 +182,7 @@ export const listUsers = async (
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.ADMIN.USER_LIST_RETRIEVED,
-      "200",
+
       {
         users: processedUsers,
         pagination: {

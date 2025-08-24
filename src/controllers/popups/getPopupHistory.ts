@@ -24,7 +24,7 @@ export const getPopupHistory = async (
     if (date) {
       const targetDate = new Date(date as string);
       if (isNaN(targetDate.getTime())) {
-        sendBadRequest(res, ERROR_MESSAGES.POPUPS.INVALID_DATE_FORMAT, "400");
+        sendBadRequest(res, ERROR_MESSAGES.POPUPS.INVALID_DATE_FORMAT);
         return;
       }
 
@@ -79,7 +79,7 @@ export const getPopupHistory = async (
       );
     }
 
-    sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.HISTORY_RETRIEVED, "200", {
+    sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.HISTORY_RETRIEVED, {
       popupHistory,
       dayStats,
       requestDate: date || new Date().toDateString(),

@@ -13,6 +13,7 @@ import { isValidPassword } from "../../utils/validators/validators";
 import { revokeAllUserTokens } from "../../utils/commons/tokenManager";
 import { COMMENTS } from "../../utils/constants/messages/comments";
 import { Op } from "sequelize";
+import { TokenRevocationReason } from "../../utils/enums/TokenRevocationReason";
 
 interface ResetPasswordRequest {
   token: string;
@@ -28,13 +29,13 @@ export const resetPassword = async (
 
     // Validación de campos requeridos
     if (!token || !newPassword) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.MISSING_RESET_FIELDS, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.MISSING_RESET_FIELDS);
       return;
     }
 
     // Validación de fortaleza de nueva contraseña
     if (!isValidPassword(newPassword)) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.WEAK_PASSWORD, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.WEAK_PASSWORD);
       return;
     }
 
@@ -57,26 +58,26 @@ export const resetPassword = async (
 
     // Verificar que el token sea válido
     if (!user) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_RESET_TOKEN, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.INVALID_RESET_TOKEN);
       return;
     }
 
     // Verificar que el usuario esté activo
     if (!user.isActive) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_INACTIVE, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.USER_INACTIVE);
       return;
     }
 
     // Verificar que el rol esté activo
     if (!user.role?.isActive) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.ROLE_INACTIVE, "401");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.ROLE_INACTIVE);
       return;
     }
 
     // Verificar que la nueva contraseña sea diferente a la actual
     const isSamePassword = await bcrypt.compare(newPassword, user.password!);
     if (isSamePassword) {
-      sendBadRequest(res, ERROR_MESSAGES.AUTH.SAME_PASSWORD, "400");
+      sendBadRequest(res, ERROR_MESSAGES.AUTH.SAME_PASSWORD);
       return;
     }
 
@@ -97,19 +98,14 @@ export const resetPassword = async (
 
     // Revocar todos los tokens JWT existentes del usuario
     // Esto fuerza logout en todos los dispositivos por seguridad
-    revokeAllUserTokens(user.id, "password_change");
+    revokeAllUserTokens(user.id, TokenRevocationReason.PASSWORD_CHANGE);
 
     // Respuesta exitosa (sin datos sensibles)
-    sendSuccessResponse(
-      res,
-      SUCCESS_MESSAGES.AUTH.PASSWORD_RESET_SUCCESS,
-      "200",
-      {
-        message: "Contraseña actualizada correctamente",
-        timestamp: new Date().toISOString(),
-        nextStep: COMMENTS.RECOVERY_NEXT_STEP,
-      },
-    );
+    sendSuccessResponse(res, SUCCESS_MESSAGES.AUTH.PASSWORD_RESET_SUCCESS, {
+      message: "Contraseña actualizada correctamente",
+      timestamp: new Date().toISOString(),
+      nextStep: COMMENTS.RECOVERY_NEXT_STEP,
+    });
   } catch (error) {
     console.error("Error en resetPassword:", error);
     sendInternalErrorResponse(res);

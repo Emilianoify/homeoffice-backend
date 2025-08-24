@@ -6,6 +6,7 @@ import {
   sendBadRequest,
   sendSuccessResponse,
   sendInternalErrorResponse,
+  sendNotFound,
 } from "../../utils/commons/responseFunctions";
 import { ERROR_MESSAGES } from "../../utils/constants/messages/error.messages";
 import { SUCCESS_MESSAGES } from "../../utils/constants/messages/success.messages";
@@ -20,7 +21,7 @@ export const getUserProfile = async (
 
     // Validación de parámetros
     if (!targetUserId) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.USER_ID_REQUIRED, "400");
+      sendBadRequest(res, ERROR_MESSAGES.ADMIN.USER_ID_REQUIRED);
       return;
     }
 
@@ -40,7 +41,7 @@ export const getUserProfile = async (
 
     // Verificar que el usuario objetivo exista
     if (!targetUser) {
-      sendBadRequest(res, ERROR_MESSAGES.ADMIN.TARGET_USER_NOT_FOUND, "404");
+      sendNotFound(res, ERROR_MESSAGES.ADMIN.TARGET_USER_NOT_FOUND);
       return;
     }
 
@@ -109,7 +110,7 @@ export const getUserProfile = async (
     sendSuccessResponse(
       res,
       SUCCESS_MESSAGES.ADMIN.USER_PROFILE_RETRIEVED,
-      "200",
+
       profileData,
     );
   } catch (error) {

@@ -29,7 +29,7 @@ export const generatePopup = async (
     })) as any;
 
     if (!activeSession) {
-      sendBadRequest(res, ERROR_MESSAGES.POPUPS.NO_ACTIVE_SESSION, "400");
+      sendBadRequest(res, ERROR_MESSAGES.POPUPS.NO_ACTIVE_SESSION);
       return;
     }
 
@@ -39,7 +39,7 @@ export const generatePopup = async (
       const nextPopupTime = new Date(activeSession.nextPopupAt);
 
       if (now < nextPopupTime) {
-        sendBadRequest(res, ERROR_MESSAGES.POPUPS.TIME_BETWEEN, "400");
+        sendBadRequest(res, ERROR_MESSAGES.POPUPS.TIME_BETWEEN);
         return;
       }
     }
@@ -54,7 +54,7 @@ export const generatePopup = async (
     });
 
     if (pendingPopup) {
-      sendBadRequest(res, ERROR_MESSAGES.POPUPS.POPUP_IS_ACTIVE, "400");
+      sendBadRequest(res, ERROR_MESSAGES.POPUPS.POPUP_IS_ACTIVE);
       return;
     }
 
@@ -83,7 +83,7 @@ export const generatePopup = async (
     );
 
     // Respuesta con datos del popup
-    sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.POPUP_SENT, "200", {
+    sendSuccessResponse(res, SUCCESS_MESSAGES.POPUPS.POPUP_SENT, {
       popupId: popup.id,
       exercise: exercise.question,
       timeLimit: 60,
