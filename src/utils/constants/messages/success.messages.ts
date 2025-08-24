@@ -23,11 +23,13 @@ export const SUCCESS_MESSAGES = {
     PASSWORD_CHANGED_SUCCESS:
       "Contraseña cambiada exitosamente por administrador.",
     USER_PROFILE_RETRIEVED: "Perfil de usuario obtenido exitosamente.",
-
     USER_PROFILE_UPDATED:
       "Perfil de usuario actualizado exitosamente por administrador.",
     NO_CHANGES_DETECTED:
       "No se detectaron cambios en los datos proporcionados.",
+    USER_LIST_RETRIEVED: "Lista de usuarios obtenida exitosamente.",
+    USER_ACTIVATED: "Usuario activado exitosamente.",
+    USER_DEACTIVATED: "Usuario desactivado exitosamente.",
   },
   SERVER: {
     STARTUP: "Server running on",

@@ -7,7 +7,6 @@ pnpm-debug.log*
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
-tests
 # Build
 dist/
 build/

@@ -1,7 +1,7 @@
 {
   "name": "homeoffice-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sistema de control y gestión para home office",
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
@@ -13,10 +13,22 @@
     "format": "prettier --write src/**/*.ts",
     "test:flow": "node tests/flow-test.js",
     "test:quick": "node tests/simple-test.js",
-    "test:states": "node tests/states-only.js"
+    "test:states": "node tests/states-only.js",
+    "test:admin": "node tests/admin-test.js",
+    "test:admin:quick": "node tests/simple-admin-test.js",
+    "test:all": "npm run test:quick && npm run test:admin:quick",
+    "test:complete": "npm run test:flow && npm run test:admin",
+    "test:production": "node tests/production-ready.js",
+    "validate": "npm run test:production"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "homeoffice",
+    "productivity",
+    "employee-monitoring",
+    "nodejs",
+    "typescript"
+  ],
+  "author": "Sistema Home Office",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {

@@ -44,7 +44,7 @@ const UserSession = sequelize.define(
       allowNull: false,
       defaultValue: UserState.DESCONECTADO,
       validate: {
-        isIn: [[USER_STATE_VALUES]],
+        isIn: [USER_STATE_VALUES],
       },
       comment: COMMENTS.SESSION_CURRENT_STATE,
     },

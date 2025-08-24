@@ -50,11 +50,14 @@ export const ERROR_MESSAGES = {
     NEW_PASSWORD_REQUIRED: "Nueva contraseña es requerida.",
     TARGET_USER_NOT_FOUND: "Usuario objetivo no encontrado.",
     TARGET_USER_INACTIVE: "Usuario objetivo está inactivo.",
+    SAME_TARGET_USER: "No puedes desactivar tu propia cuenta",
+    CHANGE_REASON_REQUIRED: "La razon del cambio debe ser notificada",
   },
   SERVER: {
     STARTUP: "Error al iniciar el servidor.",
     INTERNAL_ERROR: "Error interno del servidor",
     JWT_SECRET_MISSING: "Error de configuración del servidor",
+    INVALID_PAGINATION_PARAMETERS: "Parámetros de paginación inválidos",
   },
   ROUTING: {
     NOT_FOUND: "Ruta no encontrada.",
