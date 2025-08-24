@@ -52,6 +52,7 @@ export const ERROR_MESSAGES = {
     TARGET_USER_INACTIVE: "Usuario objetivo está inactivo.",
     SAME_TARGET_USER: "No puedes desactivar tu propia cuenta",
     CHANGE_REASON_REQUIRED: "La razon del cambio debe ser notificada",
+    NO_CHANGES_DETECTED: "Sin cambios aparentes",
   },
   SERVER: {
     STARTUP: "Error al iniciar el servidor.",
@@ -94,6 +95,17 @@ export const ERROR_MESSAGES = {
     TIME_BETWEEN: "Aún no es hora del próximo pop-up",
     MISSING_FIELDS: "ID del popup y respuesta son requeridos",
     NOT_FOUND: "Pop-up no encontrado o ya respondido",
+  },
+  TASKS: {
+    TASK_NOT_FOUND: "Tarea no encontrada",
+    CANNOT_ASSIGN_OTHER_SECTOR:
+      "No puedes asignar tareas a usuarios de otros sectores",
+    MISSING_REQUIRED_FIELDS: "Título y usuario asignado son requeridos",
+    TASK_ALREADY_COMPLETED: "La tarea ya está completada",
+    ONLY_ASSIGNEE_CAN_COMPLETE:
+      "Solo el usuario asignado puede completar la tarea",
+    INVALID_DUE_DATE: "La fecha límite debe ser futura",
+    UNAUTHORIZED_TASK_ACCESS: "No tienes permisos para acceder a esta tarea",
   },
   PATIENT: { PATIENT_CREATION: "Error al crear el paciente." },
   PROFESSIONAL: { PROFESSIONAL_CREATION: "Error al crear el profesional." },

@@ -366,7 +366,7 @@ async function runAdminTest() {
       true,
     );
 
-    if (!selfDeactivateResult.success && selfDeactivateResult.status === 400) {
+    if (!selfDeactivateResult.success && selfDeactivateResult.status === 409) {
       log("✅ Prevención de auto-desactivación funcional", "green");
       log("   No se permite que admin se desactive a sí mismo", "green");
     } else {
@@ -381,7 +381,7 @@ async function runAdminTest() {
       true,
     );
 
-    if (!nonExistentResult.success && nonExistentResult.status === 400) {
+    if (!nonExistentResult.success && nonExistentResult.status === 404) {
       log("✅ Manejo de usuario inexistente funcional", "green");
     } else {
       log("❌ Fallo en manejo de usuario inexistente", "red");

@@ -58,6 +58,13 @@ export const SUCCESS_MESSAGES = {
     CLOSING_SESSION:
       "Segundo error, cerrando sesion por inactividad o intentos fallidos",
   },
+  TASKS: {
+    TASK_CREATED: "Tarea creada exitosamente",
+    TASK_UPDATED: "Tarea actualizada exitosamente",
+    TASK_COMPLETED: "Tarea completada exitosamente",
+    TASK_DELETED: "Tarea eliminada exitosamente",
+    TASKS_RETRIEVED: "Tareas obtenidas exitosamente",
+  },
   PATIENT: {
     PATIENT_CREATED: "Paciente creado correctamente.",
   },

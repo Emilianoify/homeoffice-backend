@@ -99,6 +99,10 @@ const Task = sequelize.define(
       allowNull: true,
       comment: COMMENTS.TASK_ACTUAL_MINUTES,
     },
+    completionNotes: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
   },
   {
     tableName: "tasks",

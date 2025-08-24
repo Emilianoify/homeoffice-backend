@@ -10,6 +10,7 @@ import statesRoutes from "./routes/states/states.routes";
 import userRoutes from "./routes/user/user.routes";
 import adminRoutes from "./routes/admin/admin.routes";
 import popupsRoutes from "./routes/popups/popups.routes";
+import tasksRoutes from "./routes/tasks/tasks.routes";
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use("/states", statesRoutes);
 app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/popups", popupsRoutes);
+app.use("/tasks", tasksRoutes);
 
 // 404 handler
 app.use((_req, res) => {

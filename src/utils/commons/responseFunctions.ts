@@ -50,3 +50,6 @@ export const sendInternalErrorResponse = (res: Response) =>
 
 export const sendUnauthorized = (res: Response, message: string) =>
   sendResponse(res, HttpStatusCode.UNAUTHORIZED, message);
+
+export const sendForbidden = (res: Response, message: string) =>
+  sendResponse(res, HttpStatusCode.FORBIDDEN, message);
