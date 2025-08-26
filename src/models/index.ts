@@ -72,7 +72,6 @@ PopupResponseModel.belongsTo(UserSessionModel, {
   as: "session",
 });
 
-// Auto-relación para segundas oportunidades
 PopupResponseModel.hasOne(PopupResponseModel, {
   foreignKey: "previousPopupId",
   as: "secondChance",
@@ -84,7 +83,6 @@ PopupResponseModel.belongsTo(PopupResponseModel, {
 });
 
 // ===== RELACIONES DE TASKS =====
-// Usuario asignado (quien debe hacer la tarea)
 UserModel.hasMany(TaskModel, {
   foreignKey: "assignedTo",
   as: "tasksAssigned",
@@ -138,18 +136,32 @@ DailyReportModel.belongsTo(UserModel, {
   as: "user",
 });
 
-// Relación con el admin que realizó la acción
+// ===== RELACIONES DE AUDITORÍA =====
+
 AuditLogModel.belongsTo(UserModel, {
   foreignKey: "adminUserId",
   as: "adminUser",
-  constraints: false, // Para evitar problemas si se elimina el usuario
+  constraints: false,
 });
 
-// Relación con el usuario objetivo (puede ser null)
 AuditLogModel.belongsTo(UserModel, {
   foreignKey: "targetUserId",
   as: "targetUser",
-  constraints: false, // Para evitar problemas si se elimina el usuario
+  constraints: false,
+});
+
+// ===== RELACIONES INVERSAS DE AUDITORÍA =====
+
+UserModel.hasMany(AuditLogModel, {
+  foreignKey: "adminUserId",
+  as: "adminActions",
+  constraints: false,
+});
+
+UserModel.hasMany(AuditLogModel, {
+  foreignKey: "targetUserId",
+  as: "auditHistory",
+  constraints: false,
 });
 
 // ===== EXPORTACIONES =====
