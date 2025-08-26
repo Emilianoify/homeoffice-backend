@@ -7,7 +7,7 @@ import {
 } from "../utils/validators/validators";
 import { PopupResult } from "../utils/enums/PopupResult";
 
-const PopupResponse = sequelize.define(
+const PopupResponseModel = sequelize.define(
   "PopupResponse",
   {
     id: {
@@ -216,4 +216,4 @@ const PopupResponse = sequelize.define(
   },
 );
 
-export default PopupResponse;
+export default PopupResponseModel;

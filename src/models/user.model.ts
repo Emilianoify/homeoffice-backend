@@ -9,7 +9,7 @@ import {
 import { UserState } from "../utils/enums/UserState";
 import { PopupFrequency } from "../utils/enums/PopupFrequency";
 
-const User = sequelize.define(
+const UserModel = sequelize.define(
   "User",
   {
     id: {
@@ -213,4 +213,4 @@ const User = sequelize.define(
   },
 );
 
-export default User;
+export default UserModel;

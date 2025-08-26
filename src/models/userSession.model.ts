@@ -4,7 +4,7 @@ import { COMMENTS } from "../utils/constants/messages/comments";
 import { UserState } from "../utils/enums/UserState";
 import { USER_STATE_VALUES } from "../utils/validators/validators";
 
-const UserSession = sequelize.define(
+const UserSessionModel = sequelize.define(
   "UserSession",
   {
     id: {
@@ -163,4 +163,4 @@ const UserSession = sequelize.define(
   },
 );
 
-export default UserSession;
+export default UserSessionModel;

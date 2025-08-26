@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { COMMENTS } from "../utils/constants/messages/comments";
 
-const DailyReport = sequelize.define(
+const DailyReportModel = sequelize.define(
   "DailyReport",
   {
     id: {
@@ -166,4 +166,4 @@ const DailyReport = sequelize.define(
   },
 );
 
-export default DailyReport;
+export default DailyReportModel;

@@ -1,161 +1,178 @@
-import User from "./user.model";
-import Role from "./role.model";
-import UserSession from "./userSession.model";
+import UserModel from "./user.model";
+import RoleModel from "./role.model";
+import UserSessionModel from "./userSession.model";
 import UserStateModel from "./userState.model";
-import PopupResponse from "./popupResponse.model";
-import Task from "./task.model";
-import TaskFile from "./taskFile.model";
-import DailyReport from "./dailyReport.model";
+import PopupResponseModel from "./popupResponse.model";
+import TaskModel from "./task.model";
+import TaskFileModel from "./taskFile.model";
+import DailyReportModel from "./dailyReport.model";
+import AuditLogModel from "./auditLog.model";
 
 // ===== RELACIONES EXISTENTES =====
-Role.hasMany(User, {
+RoleModel.hasMany(UserModel, {
   foreignKey: "roleId",
   as: "users",
 });
 
-User.belongsTo(Role, {
+UserModel.belongsTo(RoleModel, {
   foreignKey: "roleId",
   as: "role",
 });
 
 // ===== RELACIONES DE USER SESSIONS =====
-User.hasMany(UserSession, {
+UserModel.hasMany(UserSessionModel, {
   foreignKey: "userId",
   as: "sessions",
 });
 
-UserSession.belongsTo(User, {
+UserSessionModel.belongsTo(UserModel, {
   foreignKey: "userId",
   as: "user",
 });
 
 // ===== RELACIONES DE USER STATES =====
-User.hasMany(UserStateModel, {
+UserModel.hasMany(UserStateModel, {
   foreignKey: "userId",
   as: "states",
 });
 
-UserStateModel.belongsTo(User, {
+UserStateModel.belongsTo(UserModel, {
   foreignKey: "userId",
   as: "user",
 });
 
-UserSession.hasMany(UserStateModel, {
+UserSessionModel.hasMany(UserStateModel, {
   foreignKey: "sessionId",
   as: "stateChanges",
 });
 
-UserStateModel.belongsTo(UserSession, {
+UserStateModel.belongsTo(UserSessionModel, {
   foreignKey: "sessionId",
   as: "session",
 });
 
 // ===== RELACIONES DE POPUP RESPONSES =====
-User.hasMany(PopupResponse, {
+UserModel.hasMany(PopupResponseModel, {
   foreignKey: "userId",
   as: "popupResponses",
 });
 
-PopupResponse.belongsTo(User, {
+PopupResponseModel.belongsTo(UserModel, {
   foreignKey: "userId",
   as: "user",
 });
 
-UserSession.hasMany(PopupResponse, {
+UserSessionModel.hasMany(PopupResponseModel, {
   foreignKey: "sessionId",
   as: "popups",
 });
 
-PopupResponse.belongsTo(UserSession, {
+PopupResponseModel.belongsTo(UserSessionModel, {
   foreignKey: "sessionId",
   as: "session",
 });
 
 // Auto-relación para segundas oportunidades
-PopupResponse.hasOne(PopupResponse, {
+PopupResponseModel.hasOne(PopupResponseModel, {
   foreignKey: "previousPopupId",
   as: "secondChance",
 });
 
-PopupResponse.belongsTo(PopupResponse, {
+PopupResponseModel.belongsTo(PopupResponseModel, {
   foreignKey: "previousPopupId",
   as: "firstAttempt",
 });
 
 // ===== RELACIONES DE TASKS =====
 // Usuario asignado (quien debe hacer la tarea)
-User.hasMany(Task, {
+UserModel.hasMany(TaskModel, {
   foreignKey: "assignedTo",
   as: "tasksAssigned",
 });
 
-Task.belongsTo(User, {
+TaskModel.belongsTo(UserModel, {
   foreignKey: "assignedTo",
   as: "assignee",
 });
 
 // Usuario que asignó (coordinador)
-User.hasMany(Task, {
+UserModel.hasMany(TaskModel, {
   foreignKey: "assignedBy",
   as: "tasksCreated",
 });
 
-Task.belongsTo(User, {
+TaskModel.belongsTo(UserModel, {
   foreignKey: "assignedBy",
   as: "assigner",
 });
 
 // ===== RELACIONES DE TASK FILES =====
-Task.hasMany(TaskFile, {
+TaskModel.hasMany(TaskFileModel, {
   foreignKey: "taskId",
   as: "files",
 });
 
-TaskFile.belongsTo(Task, {
+TaskFileModel.belongsTo(TaskModel, {
   foreignKey: "taskId",
   as: "task",
 });
 
-User.hasMany(TaskFile, {
+UserModel.hasMany(TaskFileModel, {
   foreignKey: "uploadedBy",
   as: "uploadedFiles",
 });
 
-TaskFile.belongsTo(User, {
+TaskFileModel.belongsTo(UserModel, {
   foreignKey: "uploadedBy",
   as: "uploader",
 });
 
 // ===== RELACIONES DE DAILY REPORTS =====
-User.hasMany(DailyReport, {
+UserModel.hasMany(DailyReportModel, {
   foreignKey: "userId",
   as: "dailyReports",
 });
 
-DailyReport.belongsTo(User, {
+DailyReportModel.belongsTo(UserModel, {
   foreignKey: "userId",
   as: "user",
 });
 
+// Relación con el admin que realizó la acción
+AuditLogModel.belongsTo(UserModel, {
+  foreignKey: "adminUserId",
+  as: "adminUser",
+  constraints: false, // Para evitar problemas si se elimina el usuario
+});
+
+// Relación con el usuario objetivo (puede ser null)
+AuditLogModel.belongsTo(UserModel, {
+  foreignKey: "targetUserId",
+  as: "targetUser",
+  constraints: false, // Para evitar problemas si se elimina el usuario
+});
+
 // ===== EXPORTACIONES =====
 export {
-  User,
-  Role,
-  UserSession,
+  UserModel as User,
+  RoleModel as Role,
+  UserSessionModel as UserSession,
   UserStateModel,
-  PopupResponse,
-  Task,
-  TaskFile,
-  DailyReport,
+  PopupResponseModel as PopupResponse,
+  TaskModel as Task,
+  TaskFileModel as TaskFile,
+  DailyReportModel as DailyReport,
+  AuditLogModel,
 };
 
 export default {
-  User,
-  Role,
-  UserSession,
+  User: UserModel,
+  Role: RoleModel,
+  UserSession: UserSessionModel,
   UserStateModel,
-  PopupResponse,
-  Task,
-  TaskFile,
-  DailyReport,
+  PopupResponse: PopupResponseModel,
+  Task: TaskModel,
+  TaskFile: TaskFileModel,
+  DailyReport: DailyReportModel,
+  AuditLogModel,
 };

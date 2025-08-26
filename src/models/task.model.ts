@@ -8,7 +8,7 @@ import {
 import { TaskPriority } from "../utils/enums/TaskPriority";
 import { TaskStatus } from "../utils/enums/TaskStatus";
 
-const Task = sequelize.define(
+const TaskModel = sequelize.define(
   "Task",
   {
     id: {
@@ -139,4 +139,4 @@ const Task = sequelize.define(
   },
 );
 
-export default Task;
+export default TaskModel;

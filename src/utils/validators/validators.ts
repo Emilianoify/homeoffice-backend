@@ -1,3 +1,4 @@
+import { AuditAction } from "../enums/AuditAction";
 import { PopupAction } from "../enums/PopupAction";
 import { PopupFrequency } from "../enums/PopupFrequency";
 import { PopupResult } from "../enums/PopupResult";
@@ -33,3 +34,4 @@ export const POPUP_FREQUENCY_VALUES = Object.values(PopupFrequency);
 export const POPUP_RESULT_VALUES = Object.values(PopupResult);
 export const POPUP_ACTION_VALUES = Object.values(PopupAction);
 export const STATE_CHANGED_BY_VALUES = Object.values(StateChangedBy);
+export const AUDIT_ACTION_VALUES = Object.values(AuditAction)

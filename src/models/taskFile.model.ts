@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { COMMENTS } from "../utils/constants/messages/comments";
 
-const TaskFile = sequelize.define(
+const TaskFileModel = sequelize.define(
   "TaskFile",
   {
     id: {
@@ -78,4 +78,4 @@ const TaskFile = sequelize.define(
   },
 );
 
-export default TaskFile;
+export default TaskFileModel;

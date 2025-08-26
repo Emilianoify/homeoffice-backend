@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import { COMMENTS } from "../utils/constants/messages/comments";
 
-const Role = sequelize.define(
+const RoleModel = sequelize.define(
   "Role",
   {
     id: {
@@ -56,4 +56,4 @@ const Role = sequelize.define(
   },
 );
 
-export default Role;
+export default RoleModel;

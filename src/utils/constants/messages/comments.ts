@@ -119,4 +119,12 @@ export const COMMENTS = {
   LAST_TIMEOUT_WARNING: "Momento de la última advertencia de timeout",
   LAST_PRODUCTIVITY_UPDATE:
     "Última vez que se actualizó el score de productividad del usuario",
+  ADMIN_ACTION_DO:
+    "Acción realizada (admin_password_change, user_deactivated, etc.)",
+  ADMIN_CHANGE_DESCRIPTION: "Descripción clara de lo que pasó",
+  ADMIN_ID: "ID del admin/RRHH que realizó la acción",
+  ADMIN_EMAIL: "Email del admin (para histórico)",
+  ADMIN_REASON: "Razón del cambio proporcionada por el admin",
+  MODIFIED_USER_ID: "ID del usuario afectado",
+  MODIFIED_USER_EMAIL: "Email del usuario afectado",
 };
